@@ -1,44 +1,82 @@
-#include <iostream>
-#include <SDL.h>
-#include <SDL_image.h>
+#include <bits/stdc++.h>
 #include "DEFS.h"
+#include "BaseObject.h"
 
 using namespace std;
+const char* WINDOW_TITLE = "Ping Pong Game";
 
+BaseObject background;
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
-const char* WINDOW_TITLE = "Hello World!";
+bool initData() {
+    bool success = true;
+    int ret = SDL_Init(SDL_INIT_VIDEO);
+    if (ret < 0) {
+        printf("SDL_Init Error: %s\n", SDL_GetError());
+        return false;
+    }
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
-// Created by Long on 18/02/2025.
-//
+    window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (window == NULL) {
+        printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
+        return false;
+    }
+    else {
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+        if (renderer == NULL) {
+            printf("SDL_CreateRenderer Error: %s\n", SDL_GetError());
+            return false;
+        }
+        else {
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            int imgFlag = IMG_INIT_PNG;
+            if (!(IMG_Init(imgFlag) && imgFlag)) {
+                success = false;
+            }
+        }
+    }
+    return success;
+}
+
+bool loadbackground() {
+    bool ret = background.loadIMG("Images/back_ground.jpg", renderer);
+    if (ret == false) {
+        return false;
+    }
+    return true;
+}
+
+void waitUntilKeyPressed() {
+    SDL_Event e;
+    while (true) {
+        if (SDL_PollEvent(&e) != 0 &&
+            (e.type == SDL_KEYDOWN || e.type == SDL_QUIT)) {
+            return;
+        }
+        SDL_Delay(100);
+    }
+}
+
+void close() {
+    background.Free();
+    SDL_DestroyRenderer(renderer);
+    renderer = NULL;
+    SDL_DestroyWindow(window);
+    window = NULL;
+    IMG_Quit();
+    SDL_Quit();
+}
+
 
 int main(int argc, char *argv[]) {
-    SDL_Window *window = initSDL(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
-    SDL_Renderer *renderer = createRenderer(window);
-    SDL_Texture* background = loadTexture("Images/bikiniBottom.jpg", renderer);
-
-    SDL_RenderCopy( renderer, background, NULL, NULL);
-
+    if (!initData() || !loadbackground()) {
+        return -1;
+    }
+    background.loadIMG("Images/back_ground.jpg", renderer);
+    background.Render(renderer, NULL);
     SDL_RenderPresent(renderer);
-    SDL_Texture* spongeBob = loadTexture("Images/Spongebob.png", renderer);
-    renderTexture(spongeBob, 200, 200, renderer);
-
-    SDL_Texture* damn = loadTexture("Images/450569875_352876414510371_7073470396677283877_n.jpg", renderer);
-    renderTexture(damn, 30, 30, renderer);
-
-    SDL_RenderPresent( renderer );
     waitUntilKeyPressed();
-
-    SDL_DestroyTexture( spongeBob );
-    spongeBob = NULL;
-    SDL_DestroyTexture( damn );
-    damn = NULL;
-    SDL_DestroyTexture( background );
-    background = NULL;
-
-    quitSDL(window, renderer);
-
+    close();
     return 0;
 }
 

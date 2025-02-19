@@ -1,13 +1,3 @@
-void logErrorAndExit(const char* msg, const char* error);
-SDL_Window* initSDL(int SCREEN_WIDTH, int SCREEN_HEIGHT, const char* WINDOW_TITLE);
-SDL_Renderer* createRenderer(SDL_Window* window);
-void quitSDL(SDL_Window* window, SDL_Renderer* renderer);
-void waitUntilKeyPressed();
-void drawSomething(SDL_Window* window, SDL_Renderer* renderer);
-SDL_Texture *loadTexture(const char *filename, SDL_Renderer* renderer);
-void renderTexture(SDL_Texture *texture, int x, int y,
-                   SDL_Renderer* renderer);
-
 
 
 // Created by Long on 18/02/2025.
@@ -15,5 +5,25 @@ void renderTexture(SDL_Texture *texture, int x, int y,
 
 #ifndef DEFS_H
 #define DEFS_H
+
+
+#include <bits/stdc++.h>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
+
+static SDL_Window* window = NULL;
+static SDL_Renderer* renderer = NULL;
+static SDL_Event event;
+
+//Screen
+const int SCREEN_WIDTH = 540;
+const int SCREEN_HEIGHT = 405;
+const int SCREEN_BPP = 32;
+
+const int COLOR_KEY_R = 167;
+const int COLOR_KEY_G = 175;
+const int COLOR_KEY_B = 180;
 
 #endif //DEFS_H

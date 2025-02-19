@@ -34,7 +34,9 @@ file(GLOB_RECURSE SOURCES "src/*.cpp" "src/**/*.cpp")
 # Tạo executable
 add_executable(Ping_Pong ${SOURCES} main.cpp
         DEFS.h
-        Function.cpp
+        DEFS.cpp
+        BaseObject.cpp
+        BaseObject.h
 )
 
 # Liên kết các thư viện SDL
