@@ -1,0 +1,15 @@
+# ninja log v6
+3	779	7615966507984955	CMakeFiles/Ping_Pong.dir/Function.cpp.obj	2ead8562fad47058
+6	1390	7616489661189984	CMakeFiles/Ping_Pong.dir/main.cpp.obj	74252eb627c56357
+1391	1590	7616489675038393	Ping_Pong.exe	1aba8a273867ec86
+17	249	7616491728703946	build.ninja	48fb5d9e23a11d6f
+7	1463	7616492342972612	CMakeFiles/Ping_Pong.dir/main.cpp.obj	74252eb627c56357
+14	1465	7616492343052601	CMakeFiles/Ping_Pong.dir/Function.cpp.obj	2ead8562fad47058
+14	1269	7616493640829456	CMakeFiles/Ping_Pong.dir/Function.cpp.obj	2ead8562fad47058
+6	1273	7616493640749487	CMakeFiles/Ping_Pong.dir/main.cpp.obj	74252eb627c56357
+13	1221	7616493878375679	CMakeFiles/Ping_Pong.dir/Function.cpp.obj	2ead8562fad47058
+7	1238	7616493878315558	CMakeFiles/Ping_Pong.dir/main.cpp.obj	74252eb627c56357
+1238	1405	7616493890630898	Ping_Pong.exe	9767148656a75ea3
+6	1247	7616494037064510	CMakeFiles/Ping_Pong.dir/main.cpp.obj	74252eb627c56357
+5	1380	7616494324797877	CMakeFiles/Ping_Pong.dir/Function.cpp.obj	2ead8562fad47058
+1380	1553	7616494338555674	Ping_Pong.exe	9767148656a75ea3
