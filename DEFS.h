@@ -18,12 +18,18 @@ static SDL_Renderer* renderer = NULL;
 static SDL_Event event;
 
 //Screen
-const int SCREEN_WIDTH = 540;
-const int SCREEN_HEIGHT = 405;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
 const int SCREEN_BPP = 32;
 
 const int COLOR_KEY_R = 167;
 const int COLOR_KEY_G = 175;
 const int COLOR_KEY_B = 180;
+
+typedef struct Input
+{
+    int left_;
+    int right_;
+};
 
 #endif //DEFS_H

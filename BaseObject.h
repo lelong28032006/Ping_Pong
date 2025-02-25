@@ -25,6 +25,7 @@ public:
     }
     bool loadIMG(char* s, SDL_Renderer* renderer);
     void Render(SDL_Renderer* des, const SDL_Rect* clip = NULL);
+    void Move();
     void Free();
 
 protected:
