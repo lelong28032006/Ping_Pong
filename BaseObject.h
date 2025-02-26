@@ -8,11 +8,17 @@
 #include "DEFS.h"
 using namespace std;
 
+struct Vector2 {
+    int x;
+    int y;
+};
+
 class BaseObject
 {
 public:
     BaseObject();
     virtual ~BaseObject();
+    Vector2 speed_;
     void setRect(const int& x, const int& y) {
         rect_.x = x;
         rect_.y = y;
@@ -25,7 +31,12 @@ public:
     }
     bool loadIMG(char* s, SDL_Renderer* renderer);
     void Render(SDL_Renderer* des, const SDL_Rect* clip = NULL);
-    void Move();
+    void Player_Move();
+    bool Base_Touch(BaseObject something);
+    void Ball_Move();
+    void Bouncing();
+
+
     void Free();
 
 protected:

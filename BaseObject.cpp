@@ -13,6 +13,8 @@ BaseObject::BaseObject() {
     rect_.y = 0;
     rect_.w = 0;
     rect_.h = 0;
+    speed_.x = 8.00f;
+    speed_.y = 7.00f;
 }
 
 BaseObject::~BaseObject() {
@@ -50,7 +52,8 @@ void BaseObject::Free() {
         rect_.h = 0;
     }
 }
-void BaseObject::Move() {
+
+void BaseObject::Player_Move() {
     int base_x = rect_.x;
     int base_y = rect_.y;
     const int base_SPEED = 10;
@@ -69,3 +72,24 @@ void BaseObject::Move() {
     rect_.y = base_y;
 }
 
+bool BaseObject::Base_Touch(BaseObject something) {
+    if (rect_.x + 127 >= something.rect_.x && rect_.x <= something.rect_.x  && rect_.y <= something.rect_.y + 26) {
+        return true;
+    }
+    return false;
+}
+
+void BaseObject::Ball_Move() {
+    rect_.x += speed_.x;
+    rect_.y += speed_.y;
+    if (rect_.x >= SCREEN_WIDTH - rect_.w || rect_.x <= 0) {
+        speed_.x *= -1;
+    }
+    if (rect_.y >= SCREEN_HEIGHT - rect_.h || rect_.y <= 0) {
+        speed_.y *= -1;
+    }
+}
+
+void BaseObject::Bouncing() {
+    speed_.y *= -1;
+}

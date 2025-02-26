@@ -1,12 +1,17 @@
 #include <bits/stdc++.h>
 #include "DEFS.h"
 #include "BaseObject.h"
+
 using namespace std;
 const char* WINDOW_TITLE = "Ping Pong Game";
 
 BaseObject background;
 BaseObject ball;
+
 BaseObject base_ball;
+BaseObject bullet;
+
+
 
 bool initData() {
     bool success = true;
@@ -80,19 +85,25 @@ int main(int argc, char *argv[]) {
 
     ball.loadIMG("Images/ball(1).png", renderer);
     ball.getRect();
-    ball.setRect(340,400);
+    ball.setRect(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0);
 
     bool quit = false;
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) quit = true;
         }
-        base_ball.Move();
+
+        ball.Ball_Move();
+        base_ball.Player_Move();
+        if (base_ball.Base_Touch(ball)) {
+            ball.Bouncing();
+        }
         // Vẽ lại màn hình
         SDL_RenderClear(renderer);
         background.Render(renderer);
         base_ball.Render(renderer, NULL);
         ball.Render(renderer, NULL);
+        bullet.Render(renderer, NULL);
         SDL_RenderPresent(renderer);
 
         SDL_Delay(16);
