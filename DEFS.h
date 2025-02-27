@@ -18,7 +18,7 @@ static SDL_Renderer* renderer = NULL;
 static SDL_Event event;
 
 //Screen
-const int SCREEN_WIDTH = 800;
+const int SCREEN_WIDTH = 400;
 const int SCREEN_HEIGHT = 600;
 const int SCREEN_BPP = 32;
 

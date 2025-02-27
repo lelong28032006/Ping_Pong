@@ -29,19 +29,23 @@ public:
     SDL_Texture* getTexture() const {
         return texture_;
     }
+    bool loadText(char* s,char* word, SDL_Renderer* renderer, int size);
     bool loadIMG(char* s, SDL_Renderer* renderer);
     void Render(SDL_Renderer* des, const SDL_Rect* clip = NULL);
     void Player_Move();
-    bool Base_Touch(BaseObject something);
-    void Ball_Move();
+    bool Base_Touch(BaseObject &ball);
     void Bouncing();
-
+    void Ball_Move();
+    void SPEED_UP();
+    void setScore(int s, SDL_Renderer* renderer);
+    bool EndOfTheGame(BaseObject &ball);
 
     void Free();
 
 protected:
     SDL_Texture* texture_;
     SDL_Rect rect_;
+    int score_;
 };
 
 #endif //BASEOBJECT_H
