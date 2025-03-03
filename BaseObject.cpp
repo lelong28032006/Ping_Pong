@@ -70,6 +70,8 @@ bool BaseObject::loadText(char *s,char * word, SDL_Renderer *renderer, int size)
 }
 
 void BaseObject::setScore(int s, SDL_Renderer *renderer) {
+    getRect();
+    setRect(30, 30);
     score_ = s;
     string text = "";
     string a = to_string(score_);
@@ -149,4 +151,16 @@ bool BaseObject::EndOfTheGame(BaseObject &ball) {
         return true;
     }
     return false;
+}
+
+void BaseObject::START() {
+    loadText("Text/Retro Gaming.ttf", "PRESS ANY KEY", renderer, 30);
+    Render(renderer);
+    SDL_RenderPresent(renderer);
+}
+
+void BaseObject::Ball_START() {
+    rect_.x = rect_.x + 0;
+    rect_.y += speed_.y;
+
 }

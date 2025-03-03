@@ -59,15 +59,16 @@ bool loadbackground() {
     return true;
 }
 
-void waitUntilKeyPressed() {
+bool waitUntilKeyPressed() {
     SDL_Event e;
     while (true) {
         if (SDL_PollEvent(&e) != 0 &&
             (e.type == SDL_KEYDOWN || e.type == SDL_QUIT)) {
-            return;
+            return true;
         }
         SDL_Delay(100);
     }
+    return false;
 }
 
 void close() {
@@ -88,18 +89,37 @@ int main(int argc, char *argv[]) {
 
     base_ball.loadIMG("Images/base.jpg", renderer);
     base_ball.getRect();
-    base_ball.setRect(SCREEN_WIDTH / 2.0, 500);
+    base_ball.setRect(140, 500);
 
     ball.loadIMG("Images/ball(1).png", renderer);
     ball.getRect();
-    ball.setRect(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0);
+    ball.setRect(SCREEN_WIDTH / 2.0 - 10, SCREEN_HEIGHT / 2.0);
 
     Line.loadIMG("Images/Line.png", renderer);
     Line.getRect();
     Line.setRect(0, 500);
 
-    Text.getRect();
-    Text.setRect(30, 30);
+    background.Render(renderer, NULL);
+    Line.Render(renderer, NULL);
+    base_ball.Render(renderer, NULL);
+    bullet.Render(renderer, NULL);
+    ball.Render(renderer, NULL);
+    SDL_RenderPresent(renderer);
+
+    bool begin = false;
+    while (!begin) {
+
+        Text.loadText("Text/Retro Gaming.ttf", "PRESS ANY KEY", renderer, 30);
+        Text.getRect();
+        Text.setRect(65, SCREEN_HEIGHT / 2.0 - 50);
+        Text.Render(renderer, NULL);
+        SDL_RenderPresent(renderer);
+
+        SDL_Delay(200);
+        if (waitUntilKeyPressed()) {
+            begin = true;
+        }
+    }
 
 
     bool quit = false;
@@ -110,14 +130,12 @@ int main(int argc, char *argv[]) {
         if (Line.EndOfTheGame(ball)) {
             quit = true;
         }
-        ball.Ball_Move();
-        base_ball.Player_Move();
         if (base_ball.Base_Touch(ball)) {
             ball.Bouncing();
             score++;
-            Text.setScore(score, renderer);
         }
-        if (score != 0 && score % 20 == 0 && base_ball.Base_Touch(ball)) {
+        Text.setScore(score, renderer);
+        if (score != 0 && score % 10 == 0 && base_ball.Base_Touch(ball)) {
             ball.SPEED_UP();
             base_ball.SPEED_UP();
         }
@@ -132,6 +150,24 @@ int main(int argc, char *argv[]) {
         SDL_RenderPresent(renderer);
 
         SDL_Delay(16);
+        if (score == 0) {
+            ball.Ball_START();
+            continue;
+        }
+        ball.Ball_Move();
+        base_ball.Player_Move();
+    }
+    Text.loadText("Text/Retro Gaming.ttf", "PRESS ANY KEY", renderer, 30);
+    Text.getRect();
+    Text.setRect(65, SCREEN_HEIGHT / 2.0 - 50);
+    Text.Render(renderer, NULL);
+    SDL_RenderPresent(renderer);
+
+    quit = false;
+    while (!quit) {
+        if (waitUntilKeyPressed()) {
+            quit = true;
+        }
     }
 
     return 0;

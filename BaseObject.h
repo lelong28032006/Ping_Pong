@@ -38,6 +38,8 @@ public:
     void Ball_Move();
     void SPEED_UP();
     void setScore(int s, SDL_Renderer* renderer);
+    void START();
+    void Ball_START();
     bool EndOfTheGame(BaseObject &ball);
 
     void Free();
