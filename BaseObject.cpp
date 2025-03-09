@@ -97,24 +97,7 @@ void BaseObject::Free() {
     }
 }
 
-void BaseObject::Player_Move() {
-    int base_x = rect_.x;
-    int base_y = rect_.y;
-    const int base_SPEED = speed_.x;
-    const Uint8* keyStates = SDL_GetKeyboardState(NULL);
-    if (keyStates[SDL_SCANCODE_LEFT]) {
-        base_x -= base_SPEED;
-        if (base_x < 0) base_x = 0; // Giữ paddle trong màn hình
-    }
-    if (keyStates[SDL_SCANCODE_RIGHT]) {
-        base_x += base_SPEED;
-        if (base_x > SCREEN_WIDTH - rect_.w)
-            base_x = SCREEN_WIDTH - rect_.w;
-    }
 
-    rect_.x = base_x;
-    rect_.y = base_y;
-}
 
 bool BaseObject::Base_Touch(BaseObject &something) {
     if (rect_.x + rect_.w >= something.rect_.x && rect_.x <= something.rect_.x + something.rect_.w &&
@@ -158,6 +141,12 @@ void BaseObject::START() {
     Render(renderer);
     SDL_RenderPresent(renderer);
 }
+
+void BaseObject::Reset_SPEED() {
+    speed_.x = 8.00f;
+    speed_.y = 8.00f;
+}
+
 
 void BaseObject::Ball_START() {
     rect_.x = rect_.x + 0;

@@ -73,6 +73,14 @@ build CMakeFiles/Ping_Pong.dir/BaseObject.cpp.obj: CXX_COMPILER__Ping_Pong_unsca
   OBJECT_DIR = CMakeFiles\Ping_Pong.dir
   OBJECT_FILE_DIR = CMakeFiles\Ping_Pong.dir
 
+build CMakeFiles/Ping_Pong.dir/Player.cpp.obj: CXX_COMPILER__Ping_Pong_unscanned_Debug D$:/Ping_Pong/Player.cpp || cmake_object_order_depends_target_Ping_Pong
+  DEFINES = -DSDL_MAIN_HANDLED
+  DEP_FILE = CMakeFiles\Ping_Pong.dir\Player.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -ID:/SDL2/x86_64-w64-mingw32/include/SDL2 -ID:/SDL2_image/x86_64-w64-mingw32/include/SDL2 -ID:/SDL2_mixer/x86_64-w64-mingw32/include/SDL2 -ID:/SDL2_ttf/x86_64-w64-mingw32/include/SDL2
+  OBJECT_DIR = CMakeFiles\Ping_Pong.dir
+  OBJECT_FILE_DIR = CMakeFiles\Ping_Pong.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Ping_Pong
@@ -81,7 +89,7 @@ build CMakeFiles/Ping_Pong.dir/BaseObject.cpp.obj: CXX_COMPILER__Ping_Pong_unsca
 #############################################
 # Link the executable Ping_Pong.exe
 
-build Ping_Pong.exe: CXX_EXECUTABLE_LINKER__Ping_Pong_Debug CMakeFiles/Ping_Pong.dir/main.cpp.obj CMakeFiles/Ping_Pong.dir/DEFS.cpp.obj CMakeFiles/Ping_Pong.dir/BaseObject.cpp.obj
+build Ping_Pong.exe: CXX_EXECUTABLE_LINKER__Ping_Pong_Debug CMakeFiles/Ping_Pong.dir/main.cpp.obj CMakeFiles/Ping_Pong.dir/DEFS.cpp.obj CMakeFiles/Ping_Pong.dir/BaseObject.cpp.obj CMakeFiles/Ping_Pong.dir/Player.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lSDL2main  -lSDL2  -lSDL2_image  -lSDL2_mixer  -lSDL2_ttf  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LD:/SDL2/x86_64-w64-mingw32/lib   -LD:/SDL2_image/x86_64-w64-mingw32/lib   -LD:/SDL2_mixer/x86_64-w64-mingw32/lib   -LD:/SDL2_ttf/x86_64-w64-mingw32/lib

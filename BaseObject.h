@@ -32,7 +32,6 @@ public:
     bool loadText(char* s,char* word, SDL_Renderer* renderer, int size);
     bool loadIMG(char* s, SDL_Renderer* renderer);
     void Render(SDL_Renderer* des, const SDL_Rect* clip = NULL);
-    void Player_Move();
     bool Base_Touch(BaseObject &ball);
     void Bouncing();
     void Ball_Move();
@@ -41,6 +40,7 @@ public:
     void START();
     void Ball_START();
     bool EndOfTheGame(BaseObject &ball);
+    void Reset_SPEED();
 
     void Free();
 

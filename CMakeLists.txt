@@ -37,6 +37,8 @@ add_executable(Ping_Pong ${SOURCES} main.cpp
         DEFS.cpp
         BaseObject.cpp
         BaseObject.h
+        Player.cpp
+        Player.h
 )
 
 # Liên kết các thư viện SDL
