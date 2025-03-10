@@ -97,16 +97,6 @@ void BaseObject::Free() {
     }
 }
 
-
-
-bool BaseObject::Base_Touch(BaseObject &something) {
-    if (rect_.x + rect_.w >= something.rect_.x && rect_.x <= something.rect_.x + something.rect_.w &&
-        rect_.y - something.rect_.h <= something.rect_.y && rect_.y + rect_.h >= something.rect_.y) {
-        return true;
-    }
-    return false;
-}
-
 void BaseObject::Ball_Move() {
     rect_.x += speed_.x;
     rect_.y += speed_.y;
@@ -120,13 +110,6 @@ void BaseObject::Ball_Move() {
 
 void BaseObject::Bouncing() {
     speed_.y *= -1;
-}
-
-void BaseObject::SPEED_UP() {
-    if (speed_.y > 0) speed_.y += 2.00f;
-    else speed_.y -= 2.00f;
-    if (speed_.x > 0) speed_.x += 2.00f;
-    else speed_.x -= 2.00f;
 }
 
 bool BaseObject::EndOfTheGame(BaseObject &ball) {
@@ -151,5 +134,4 @@ void BaseObject::Reset_SPEED() {
 void BaseObject::Ball_START() {
     rect_.x = rect_.x + 0;
     rect_.y += speed_.y;
-
 }

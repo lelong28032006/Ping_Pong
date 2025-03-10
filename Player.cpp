@@ -33,3 +33,18 @@ void Player::Player_Move() {
     rect_.x = base_x;
     rect_.y = base_y;
 }
+
+bool Player::Base_Touch(Player &something) {
+    if (rect_.x + rect_.w >= something.rect_.x && rect_.x <= something.rect_.x + something.rect_.w &&
+        rect_.y - something.rect_.h <= something.rect_.y && rect_.y + rect_.h >= something.rect_.y) {
+        return true;
+        }
+    return false;
+}
+
+void Player::SPEED_UP() {
+    if (speed_.y > 0) speed_.y += 2.00f;
+    else speed_.y -= 2.00f;
+    if (speed_.x > 0) speed_.x += 2.00f;
+    else speed_.x -= 2.00f;
+}

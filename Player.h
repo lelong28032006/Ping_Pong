@@ -14,6 +14,8 @@ class Player : public BaseObject {
     Player();
     virtual ~Player();
     void Player_Move();
+    bool Base_Touch(Player& somthing);
+    void SPEED_UP();
 };
 
 #endif //PLAYER_H
