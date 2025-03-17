@@ -16,6 +16,13 @@ class Player : public BaseObject {
     void Player_Move();
     bool Base_Touch(Player& somthing);
     void SPEED_UP();
+    void Bouncing();
+    void Ball_Move();
+    void Ball_START();
+    void Reset_SPEED();
+    void SetRandom_Position();
+    void Bullet_Move();
+    bool Spawn_Bullet();
 };
 
 #endif //PLAYER_H

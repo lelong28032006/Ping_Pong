@@ -4,18 +4,17 @@
 #include "Player.h"
 
 using namespace std;
-const char* WINDOW_TITLE = "Ping Pong";
+const char* WINDOW_TITLE = "Ping Pong Ching Chong";
 
 BaseObject background;
-Player ball;
-Player base_ball;
-BaseObject bullet;
 BaseObject Line;
 BaseObject Text;
+Player ball;
+Player base_ball;
+Player bullet;
 
 int score = 0;
 int highest_score = 0;
-
 
 
 bool initData();
@@ -33,7 +32,7 @@ int main(int argc, char *argv[]) {
 
     int lastSpeedUpScore = 0;
 
-    base_ball.loadIMG("Images/base.jpg", renderer);
+    base_ball.loadIMG("Images/base(1).jpg", renderer);
     base_ball.getRect();
     base_ball.setRect(140, 500);
 
@@ -45,11 +44,15 @@ int main(int argc, char *argv[]) {
     Line.getRect();
     Line.setRect(0, 500);
 
+    bullet.loadIMG("Images/bullet.png", renderer);
+    bullet.getRect();
+
     bool quitGame = false; // Khi nào thật sự muốn thoát game
 
     while (!quitGame) {
         // Reset thông số cho ván mới
         resetGame();
+        bool start_to_get_bullet = false; // Giá trị để quyết xem có render Bullet
 
         bool begin = false;
         Uint32 lastToggleTime = SDL_GetTicks();
@@ -59,8 +62,6 @@ int main(int argc, char *argv[]) {
             background.Render(renderer, NULL);
             Line.Render(renderer, NULL);
             base_ball.Render(renderer, NULL);
-            bullet.Render(renderer, NULL);
-
             Text.setScore(score, renderer);
             Text.Render(renderer, NULL);
 
@@ -81,7 +82,7 @@ int main(int argc, char *argv[]) {
 
             SDL_Delay(16);
         }
-
+        bullet.setRect(0, 0);
         if (quitGame) break;
         // Vòng lặp chính của game
         bool quitRound = false;
@@ -94,7 +95,7 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            if (Line.EndOfTheGame(ball)) {
+            if (Line.EndOfTheGame(ball) || base_ball.Base_Touch(bullet)) {
                 quitRound = true;
                 break; // Ra khỏi vòng chơi chính
             }
@@ -105,12 +106,18 @@ int main(int argc, char *argv[]) {
             }
 
             Text.setScore(score, renderer);
-
-            // Tăng tốc khi đạt điểm chia hết cho 5
-            if (score != 0 && score % 5 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
+            // Tăng tốc khi đạt điểm chia hết cho 10
+            if (score != 0 && score % 10 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
                 ball.SPEED_UP();
                 base_ball.SPEED_UP();
                 lastSpeedUpScore = score;
+            }
+            if (score != 0 && score % 5 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
+                bullet.SetRandom_Position();
+            }
+
+            if (bullet.Spawn_Bullet()) {
+                bullet.SetRandom_Position();
             }
 
             SDL_RenderClear(renderer);
@@ -119,7 +126,10 @@ int main(int argc, char *argv[]) {
             Text.Render(renderer, NULL);
             base_ball.Render(renderer, NULL);
             ball.Render(renderer, NULL);
-            bullet.Render(renderer, NULL);
+            if (score >= 5) {
+                bullet.Render(renderer, NULL);
+                bullet.Bullet_Move();
+            }
             SDL_RenderPresent(renderer);
 
             SDL_Delay(16);
@@ -150,9 +160,7 @@ int main(int argc, char *argv[]) {
             background.Render(renderer, NULL);
             Line.Render(renderer, NULL);
             base_ball.Render(renderer, NULL);
-            bullet.Render(renderer, NULL);
             ball.Render(renderer, NULL);
-
             Text.setScore(score, renderer);
             Text.Render(renderer, NULL);
 
@@ -194,19 +202,18 @@ bool initData() {
         cout << "SDL_CreateWindow Error: " << SDL_GetError() << endl;
         return false;
     }
-    else {
-        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        if (renderer == NULL) {
-            cout << "SDL_CreateRenderer Error: " << SDL_GetError() << endl;
-            return false;
-        }
-        else {
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            int imgFlag = IMG_INIT_PNG;
-            if (!(IMG_Init(imgFlag) && imgFlag)) {
-                success = false;
-            }
-        }
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (renderer == NULL) {
+        cout << "SDL_CreateRenderer Error: " << SDL_GetError() << endl;
+        return false;
+    }
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    int imgFlag = IMG_INIT_PNG;
+    if (!(IMG_Init(imgFlag) && imgFlag)) {
+    success = false;
+
+
     }
     if (TTF_Init() == -1) {
         cout << "TTF Init Failed: " << TTF_GetError() << endl;

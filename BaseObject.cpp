@@ -97,21 +97,6 @@ void BaseObject::Free() {
     }
 }
 
-void BaseObject::Ball_Move() {
-    rect_.x += speed_.x;
-    rect_.y += speed_.y;
-    if (rect_.x >= SCREEN_WIDTH - rect_.w || rect_.x <= 0) {
-        speed_.x *= -1;
-    }
-    if (rect_.y >= SCREEN_HEIGHT - rect_.h || rect_.y <= 0) {
-        speed_.y *= -1;
-    }
-}
-
-void BaseObject::Bouncing() {
-    speed_.y *= -1;
-}
-
 bool BaseObject::EndOfTheGame(BaseObject &ball) {
     if (rect_.y < ball.rect_.y + ball.rect_.h -1) {
         return true;
@@ -123,15 +108,4 @@ void BaseObject::START() {
     loadText("Text/Retro Gaming.ttf", "PRESS ANY KEY", renderer, 30);
     Render(renderer);
     SDL_RenderPresent(renderer);
-}
-
-void BaseObject::Reset_SPEED() {
-    speed_.x = 8.00f;
-    speed_.y = 8.00f;
-}
-
-
-void BaseObject::Ball_START() {
-    rect_.x = rect_.x + 0;
-    rect_.y += speed_.y;
 }
