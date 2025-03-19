@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
-#include "DEFS.h"
-#include "BaseObject.h"
-#include "Player.h"
+#include "lib/DEFS.h"
+#include "lib/BaseObject.h"
+#include "lib/Player.h"
 
 using namespace std;
 const char* WINDOW_TITLE = "Ping Pong Ching Chong";
@@ -274,3 +274,125 @@ void close() {
     IMG_Quit();
     SDL_Quit();
 }
+
+
+
+/*
+// FLAPPY
+#include <SDL.h>
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+
+const int SCREEN_WIDTH = 400;
+const int SCREEN_HEIGHT = 600;
+const int BIRD_WIDTH = 20;
+const int BIRD_HEIGHT = 20;
+const int PIPE_WIDTH = 50;
+const int PIPE_GAP = 150;
+
+class Bird {
+public:
+    int x, y, velocity;
+
+    Bird() {
+        x = 50;
+        y = SCREEN_HEIGHT / 2;
+        velocity = 0;
+    }
+
+    void jump() {
+        velocity = -100;
+    }
+
+    void update() {
+        velocity += 1; // Gravity
+        y += velocity;
+    }
+
+    void draw(SDL_Renderer* renderer) {
+        SDL_Rect birdRect = { x, y, BIRD_WIDTH, BIRD_HEIGHT };
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderFillRect(renderer, &birdRect);
+    }
+};
+
+class Pipe {
+public:
+    int x, height;
+
+    Pipe() {
+        x = SCREEN_WIDTH;
+        height = rand() % (SCREEN_HEIGHT - PIPE_GAP - 100) + 50; // Random height
+    }
+
+    void update() {
+        x -= 5; // Move left
+    }
+
+    void draw(SDL_Renderer* renderer) {
+        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        SDL_Rect topPipe = { x, 0, PIPE_WIDTH, height };
+        SDL_Rect bottomPipe = { x, height + PIPE_GAP, PIPE_WIDTH, SCREEN_HEIGHT - height - PIPE_GAP };
+        SDL_RenderFillRect(renderer, &topPipe);
+        SDL_RenderFillRect(renderer, &bottomPipe);
+    }
+};
+
+int main(int argc, char* argv[]) {
+    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Window* window = SDL_CreateWindow("Flappy Bird Clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+
+    Bird bird;
+    std::vector<Pipe> pipes;
+    pipes.push_back(Pipe());
+
+    bool running = true;
+    SDL_Event event;
+
+    while (running) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = false;
+            }
+            if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_SPACE) {
+                    bird.jump();
+                }
+            }
+        }
+
+        bird.update();
+
+        if (pipes.back().x < SCREEN_WIDTH - 200) {
+            pipes.push_back(Pipe());
+        }
+
+        for (auto& pipe : pipes) {
+            pipe.update();
+        }
+
+        // Clear screen
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderClear(renderer);
+
+        // Draw bird
+        bird.draw(renderer);
+
+        // Draw pipes
+        for (auto& pipe : pipes) {
+            pipe.draw(renderer);
+        }
+
+        // Present the back buffer
+        SDL_RenderPresent(renderer);
+        SDL_Delay(16); // ~60 FPS
+    }
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
+}*/

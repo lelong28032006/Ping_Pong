@@ -32,13 +32,15 @@ add_compile_definitions(SDL_MAIN_HANDLED)
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/**/*.cpp")
 
 # Tạo executable
-add_executable(Ping_Pong ${SOURCES} main.cpp
-        DEFS.h
-        DEFS.cpp
-        BaseObject.cpp
-        BaseObject.h
-        Player.cpp
-        Player.h
+add_executable(Ping_Pong ${SOURCES} Scripts/main.cpp
+        Scripts/DEFS.cpp
+        Scripts/BaseObject.cpp
+        Scripts/Player.cpp
+        Scripts/Entity.cpp
+        Scripts/lib/Entity.h
+        Scripts/lib/DEFS.h
+        Scripts/lib/Player.h
+        Scripts/lib/BaseObject.h
 )
 
 # Liên kết các thư viện SDL

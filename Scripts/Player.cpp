@@ -2,7 +2,7 @@
 // Created by Long on 09/03/2025.
 //
 
-#include "Player.h"
+#include "lib/Player.h"
 #include  <bits/stdc++.h>
 
 using namespace std;

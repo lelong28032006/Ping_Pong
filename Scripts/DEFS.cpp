@@ -1,7 +1,7 @@
-#include "DEFS.h"
+#include "lib/DEFS.h"
 
 
-#include "BaseObject.h"
+#include "lib/BaseObject.h"
 
 class mainobject : BaseObject {
     public:

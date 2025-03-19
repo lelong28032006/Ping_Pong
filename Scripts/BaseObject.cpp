@@ -2,7 +2,7 @@
 // Created by Long on 19/02/2025.
 //
 
-#include "BaseObject.h"
+#include "lib/BaseObject.h"
 #include  <bits/stdc++.h>
 
 using namespace std;
