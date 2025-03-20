@@ -9,6 +9,8 @@ const char* WINDOW_TITLE = "Ping Pong Ching Chong";
 BaseObject background;
 BaseObject Line;
 BaseObject Text;
+BaseObject Present_Score;
+BaseObject High_Score;
 Player ball;
 Player base_ball;
 Player bullet;
@@ -47,6 +49,12 @@ int main(int argc, char *argv[]) {
     bullet.loadIMG("Images/bullet.png", renderer);
     bullet.getRect();
 
+    Present_Score.getRect();
+    Present_Score.setRect(15, 15);
+
+    High_Score.getRect();
+    High_Score.setRect(15, 50);
+
     bool quitGame = false; // Khi nào thật sự muốn thoát game
 
     while (!quitGame) {
@@ -62,8 +70,10 @@ int main(int argc, char *argv[]) {
             background.Render(renderer, NULL);
             Line.Render(renderer, NULL);
             base_ball.Render(renderer, NULL);
-            Text.setScore(score, renderer);
-            Text.Render(renderer, NULL);
+            Present_Score.setScore(score, renderer);
+            Present_Score.Render(renderer, NULL);
+            High_Score.setScore(highest_score, renderer);
+            High_Score.Render(renderer, NULL);
 
             Uint32 currentTime = SDL_GetTicks();
             if (currentTime - lastToggleTime >= 500) {
@@ -103,9 +113,12 @@ int main(int argc, char *argv[]) {
             if (base_ball.Base_Touch(ball)) {
                 ball.Bouncing();
                 score++;
+                if (score > highest_score) {
+                    highest_score = score;
+                }
             }
-
-            Text.setScore(score, renderer);
+            Present_Score.setScore(score, renderer);
+            High_Score.setScore(highest_score, renderer);
             // Tăng tốc khi đạt điểm chia hết cho 10
             if (score != 0 && score % 10 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
                 ball.SPEED_UP();
@@ -123,7 +136,8 @@ int main(int argc, char *argv[]) {
             SDL_RenderClear(renderer);
             background.Render(renderer, NULL);
             Line.Render(renderer, NULL);
-            Text.Render(renderer, NULL);
+            Present_Score.Render(renderer, NULL);
+            High_Score.Render(renderer, NULL);
             base_ball.Render(renderer, NULL);
             ball.Render(renderer, NULL);
             if (score >= 5) {
@@ -161,8 +175,10 @@ int main(int argc, char *argv[]) {
             Line.Render(renderer, NULL);
             base_ball.Render(renderer, NULL);
             ball.Render(renderer, NULL);
-            Text.setScore(score, renderer);
-            Text.Render(renderer, NULL);
+            Present_Score.setScore(score, renderer);
+            Present_Score.Render(renderer, NULL);
+            High_Score.setScore(highest_score, renderer);
+            High_Score.Render(renderer, NULL);
 
             Uint32 currentTime = SDL_GetTicks();
             if (currentTime - lastToggleTime >= 500) {

@@ -69,13 +69,16 @@ bool BaseObject::loadText(char *s,char * word, SDL_Renderer *renderer, int size)
     return texture_ != NULL;
 }
 
+bool BaseObject::loadMusic(char *s, SDL_Renderer *renderer) {
+
+}
+
+
 void BaseObject::setScore(int s, SDL_Renderer *renderer) {
-    getRect();
-    setRect(30, 30);
     score_ = s;
     string text = "";
     string a = to_string(score_);
-    for (int i = 0; i < 5-a.length(); i++) {
+    for (int i = 0; i < 4-a.length(); i++) {
         text += '0';
     }
     text += a;

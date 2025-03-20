@@ -36,8 +36,6 @@ add_executable(Ping_Pong ${SOURCES} Scripts/main.cpp
         Scripts/DEFS.cpp
         Scripts/BaseObject.cpp
         Scripts/Player.cpp
-        Scripts/Entity.cpp
-        Scripts/lib/Entity.h
         Scripts/lib/DEFS.h
         Scripts/lib/Player.h
         Scripts/lib/BaseObject.h
