@@ -31,7 +31,6 @@ public:
     }
     bool loadText(char* s,char* word, SDL_Renderer* renderer, int size);
     bool loadIMG(char* s, SDL_Renderer* renderer);
-    bool loadMusic(char* s, SDL_Renderer* renderer);
     void Render(SDL_Renderer* des, const SDL_Rect* clip = NULL);
     void setScore(int s, SDL_Renderer* renderer);
     void START();

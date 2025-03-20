@@ -36,9 +36,12 @@ add_executable(Ping_Pong ${SOURCES} Scripts/main.cpp
         Scripts/DEFS.cpp
         Scripts/BaseObject.cpp
         Scripts/Player.cpp
+        Scripts/music.cpp
+
         Scripts/lib/DEFS.h
         Scripts/lib/Player.h
         Scripts/lib/BaseObject.h
+        Scripts/lib/music.h
 )
 
 # Liên kết các thư viện SDL

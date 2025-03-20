@@ -2,6 +2,7 @@
 #include "lib/DEFS.h"
 #include "lib/BaseObject.h"
 #include "lib/Player.h"
+#include "lib/music.h"
 
 using namespace std;
 const char* WINDOW_TITLE = "Ping Pong Ching Chong";
@@ -61,12 +62,13 @@ int main(int argc, char *argv[]) {
         // Reset thông số cho ván mới
         resetGame();
         bool start_to_get_bullet = false; // Giá trị để quyết xem có render Bullet
+        bool fistGet_Highest = false;
 
         bool begin = false;
         Uint32 lastToggleTime = SDL_GetTicks();
         bool showText = true;
         while (!begin) {
-            quitEvents(quitGame, begin);
+            quitEvents(quitGame, begin);//Quit luôn Game
             background.Render(renderer, NULL);
             Line.Render(renderer, NULL);
             base_ball.Render(renderer, NULL);
@@ -111,10 +113,15 @@ int main(int argc, char *argv[]) {
             }
 
             if (base_ball.Base_Touch(ball)) {
+                Play_Paddle_Hit_Sound();
                 ball.Bouncing();
                 score++;
                 if (score > highest_score) {
                     highest_score = score;
+                    if (fistGet_Highest == false) {
+                        Play_Get_HighScore_Sound();
+                        fistGet_Highest = true;
+                    }
                 }
             }
             Present_Score.setScore(score, renderer);
@@ -164,13 +171,7 @@ int main(int argc, char *argv[]) {
         lastToggleTime = SDL_GetTicks();
         showText = true;
         while (!waitForRestart) {
-            quitEvents(quitGame, waitForRestart);
-            while (SDL_PollEvent(&event)) {
-                if (event.type == SDL_QUIT) {
-                    waitForRestart = true;
-                    quitGame = true; // Thoát luôn game
-                }
-            }
+            quitEvents(quitGame, waitForRestart);//Quit luôn Game
             background.Render(renderer, NULL);
             Line.Render(renderer, NULL);
             base_ball.Render(renderer, NULL);
@@ -206,6 +207,7 @@ int main(int argc, char *argv[]) {
 
 bool initData() {
     bool success = true;
+    //Render video
     int ret = SDL_Init(SDL_INIT_VIDEO);
     if (ret < 0) {
         cout << "SDL_Init Error: " << SDL_GetError() << endl;
@@ -228,12 +230,15 @@ bool initData() {
     int imgFlag = IMG_INIT_PNG;
     if (!(IMG_Init(imgFlag) && imgFlag)) {
     success = false;
-
-
+    //Render Text
     }
     if (TTF_Init() == -1) {
         cout << "TTF Init Failed: " << TTF_GetError() << endl;
         return false;
+    }
+    //Render Music
+    if (!init_Audio()) {
+        cout << "init_Audio Error: " << Mix_GetError() << endl;
     }
     return success;
 }
@@ -283,6 +288,7 @@ void resetGame() {
 
 void close() {
     background.Free();
+    close_Audio(); // Đóng âm thanh trước khi quit SDL
     SDL_DestroyRenderer(renderer);
     renderer = NULL;
     SDL_DestroyWindow(window);
