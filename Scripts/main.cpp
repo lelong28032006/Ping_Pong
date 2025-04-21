@@ -12,6 +12,10 @@ BaseObject Line;
 BaseObject Text;
 BaseObject Present_Score;
 BaseObject High_Score;
+BaseObject Mode_1_Text;
+BaseObject Mode_2_Text;
+BaseObject Back_to_menu_text;
+BaseObject Menu_Arrow;
 Player ball;
 Player base_ball;
 Player bullet;
@@ -33,8 +37,6 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    int lastSpeedUpScore = 0;
-
     base_ball.loadIMG("Images/base(1).jpg", renderer);
     base_ball.getRect();
     base_ball.setRect(140, 500);
@@ -50,6 +52,27 @@ int main(int argc, char *argv[]) {
     bullet.loadIMG("Images/bullet.png", renderer);
     bullet.getRect();
 
+    Menu_Arrow.loadIMG("Images/Menu_Arrow.png", renderer);
+    Menu_Arrow.getRect();
+    Menu_Arrow.setRect(60, SCREEN_HEIGHT / 2.0 + 5);
+    Mode_1_Text.loadText("Text/Retro Gaming.ttf", "1 PLAYER", renderer, 30);
+    Mode_1_Text.getRect();
+    Mode_1_Text.setRect(120, SCREEN_HEIGHT / 2.0);
+    Mode_2_Text.loadText("Text/Retro Gaming.ttf", "2 PLAYER", renderer, 30);
+    Mode_2_Text.getRect();
+    Mode_2_Text.setRect(120, SCREEN_HEIGHT / 2.0 + 60);
+    Back_to_menu_text.loadText("Text/Retro Gaming.ttf", "PRESS SPACE: MENU", renderer, 12);
+    Back_to_menu_text.getRect();
+    Back_to_menu_text.setRect(125, SCREEN_HEIGHT / 2.0 + 60);
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+    SDL_Rect blackSquare; //Tạo hình vuông màu đen
+    blackSquare.x = 60;
+    blackSquare.y = SCREEN_HEIGHT / 2.0 + 5 + 60;
+    blackSquare.w = 30;
+    blackSquare.h = 30;
+
     Present_Score.getRect();
     Present_Score.setRect(15, 15);
 
@@ -57,148 +80,197 @@ int main(int argc, char *argv[]) {
     High_Score.setRect(15, 50);
 
     bool quitGame = false; // Khi nào thật sự muốn thoát game
-
     while (!quitGame) {
-        // Reset thông số cho ván mới
-        resetGame();
-        bool start_to_get_bullet = false; // Giá trị để quyết xem có render Bullet
-        bool fistGet_Highest = false;
-
-        bool begin = false;
-        Uint32 lastToggleTime = SDL_GetTicks();
-        bool showText = true;
-        while (!begin) {
-            quitEvents(quitGame, begin);//Quit luôn Game
-            background.Render(renderer, NULL);
-            Line.Render(renderer, NULL);
-            base_ball.Render(renderer, NULL);
-            Present_Score.setScore(score, renderer);
-            Present_Score.Render(renderer, NULL);
-            High_Score.setScore(highest_score, renderer);
-            High_Score.Render(renderer, NULL);
-
-            Uint32 currentTime = SDL_GetTicks();
-            if (currentTime - lastToggleTime >= 500) {
-                showText = !showText;
-                lastToggleTime = currentTime;
-            }
-
-            if (showText) {
-                Text.loadText("Text/Retro Gaming.ttf", "PRESS ANY KEY", renderer, 30);
-                Text.getRect();
-                Text.setRect(65, SCREEN_HEIGHT / 2.0 - 50);
-                Text.Render(renderer, NULL);
-            }
-
-            SDL_RenderPresent(renderer);
-
-            SDL_Delay(16);
-        }
-        bullet.setRect(0, 0);
-        if (quitGame) break;
-        // Vòng lặp chính của game
-        bool quitRound = false;
-        while (!quitRound) {
-
-            while (SDL_PollEvent(&event)) {
-                if (event.type == SDL_QUIT) {
+        bool menu = false; //Load Menu
+        int game_mode = 0;
+        while (!menu) {
+            SDL_Event e;
+            while (SDL_PollEvent(&e)) {
+                if (e.type == SDL_QUIT) {
                     quitGame = true;
-                    quitRound = true;
+                    menu = true;  // Cho vòng lặp bên ngoài dừng lại luôn
                 }
-            }
-
-            if (Line.EndOfTheGame(ball) || base_ball.Base_Touch(bullet)) {
-                quitRound = true;
-                break; // Ra khỏi vòng chơi chính
-            }
-
-            if (base_ball.Base_Touch(ball)) {
-                Play_Paddle_Hit_Sound();
-                ball.Bouncing();
-                score++;
-                if (score > highest_score) {
-                    highest_score = score;
-                    if (fistGet_Highest == false) {
-                        Play_Get_HighScore_Sound();
-                        fistGet_Highest = true;
+                if (e.type == SDL_KEYDOWN) {
+                    if (e.key.keysym.sym == SDLK_RETURN) {
+                        menu = true; // Ấn Enter để chọn chế độ
+                    }
+                    if (e.key.keysym.sym == SDLK_DOWN) {
+                        blackSquare.y = SCREEN_HEIGHT / 2.0 + 5;
+                        Menu_Arrow.setRect(60, SCREEN_HEIGHT / 2.0 + 5 + 60);
+                        game_mode = 1;
+                    }
+                    if (e.key.keysym.sym == SDLK_UP) {
+                        blackSquare.y = SCREEN_HEIGHT / 2.0 + 5 + 60;
+                        Menu_Arrow.setRect(60, SCREEN_HEIGHT / 2.0 + 5);
+                        game_mode = 0;
                     }
                 }
             }
-            Present_Score.setScore(score, renderer);
-            High_Score.setScore(highest_score, renderer);
-            // Tăng tốc khi đạt điểm chia hết cho 10
-            if (score != 0 && score % 10 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
-                ball.SPEED_UP();
-                base_ball.SPEED_UP();
-                lastSpeedUpScore = score;
-            }
-            if (score != 0 && score % 5 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
-                bullet.SetRandom_Position();
-            }
-
-            if (bullet.Spawn_Bullet()) {
-                bullet.SetRandom_Position();
-            }
-
-            SDL_RenderClear(renderer);
-            background.Render(renderer, NULL);
-            Line.Render(renderer, NULL);
-            Present_Score.Render(renderer, NULL);
-            High_Score.Render(renderer, NULL);
-            base_ball.Render(renderer, NULL);
-            ball.Render(renderer, NULL);
-            if (score >= 5) {
-                bullet.Render(renderer, NULL);
-                bullet.Bullet_Move();
-            }
+            Text.loadText("Text/Retro Gaming.ttf", "PING PONG", renderer, 40);
+            Text.getRect();
+            Text.setRect(70, 90);
+            Text.Render(renderer);
+            Mode_1_Text.Render(renderer);
+            Mode_2_Text.Render(renderer);
+            Menu_Arrow.Render(renderer);
+            SDL_RenderFillRect(renderer, &blackSquare);
             SDL_RenderPresent(renderer);
-
-            SDL_Delay(16);
-
-            if (score == 0) {
-                ball.Ball_START();
-                continue;
-            }
-
-            ball.Ball_Move();
-            base_ball.Player_Move();
         }
-
-
         if (quitGame) break;
+        if (game_mode == 0) {
+            bool mode_1_Playround = false;
+            while (!mode_1_Playround) {
+                resetGame(); //Reset thông số cho ván mới
+                bool fistGet_Highest = false;
 
-        bool waitForRestart = false;
-        lastToggleTime = SDL_GetTicks();
-        showText = true;
-        while (!waitForRestart) {
-            quitEvents(quitGame, waitForRestart);//Quit luôn Game
-            background.Render(renderer, NULL);
-            Line.Render(renderer, NULL);
-            base_ball.Render(renderer, NULL);
-            ball.Render(renderer, NULL);
-            Present_Score.setScore(score, renderer);
-            Present_Score.Render(renderer, NULL);
-            High_Score.setScore(highest_score, renderer);
-            High_Score.Render(renderer, NULL);
+                bool begin = false;
+                Uint32 lastToggleTime = SDL_GetTicks();
+                bool showText = true;
+                while (!begin) {
+                    quitEvents(quitGame, begin); //Quit luôn Game
+                    background.Render(renderer, NULL);
+                    Line.Render(renderer, NULL);
+                    base_ball.Render(renderer, NULL);
+                    Present_Score.setScore(score, renderer);
+                    Present_Score.Render(renderer, NULL);
+                    High_Score.setScore(highest_score, renderer);
+                    High_Score.Render(renderer, NULL);
 
-            Uint32 currentTime = SDL_GetTicks();
-            if (currentTime - lastToggleTime >= 500) {
-                showText = !showText;
-                lastToggleTime = currentTime;
+                    Uint32 currentTime = SDL_GetTicks();
+                    if (currentTime - lastToggleTime >= 500) {
+                        showText = !showText;
+                        lastToggleTime = currentTime;
+                    }
+
+                    if (showText) {
+                        Text.loadText("Text/Retro Gaming.ttf", "PRESS ANY KEY", renderer, 30);
+                        Text.getRect();
+                        Text.setRect(65, SCREEN_HEIGHT / 2.0 - 50);
+                        Text.Render(renderer, NULL);
+                    }
+
+                    SDL_RenderPresent(renderer);
+
+                    SDL_Delay(16);
+                }
+                bullet.setRect(0, 0);
+                if (quitGame) break;
+
+                bool quitRound = false; // Vòng lặp chính của game
+                int lastSpeedUpScore = 0;
+                while (!quitRound) {
+                    while (SDL_PollEvent(&event)) {
+                        if (event.type == SDL_QUIT) {
+                            quitGame = true;
+                            quitRound = true;
+                        }
+                    }
+                    if (Line.EndOfTheGame(ball) || base_ball.Base_Touch(bullet)) {
+                        quitRound = true;
+                        break; // Ra khỏi vòng chơi chính
+                    }
+
+                    if (base_ball.Base_Touch(ball)) {
+                        Play_Paddle_Hit_Sound();
+                        ball.Bouncing();
+                        score++;
+                        if (score > highest_score) {
+                            highest_score = score;
+                            if (fistGet_Highest == false) {
+                                Play_Get_HighScore_Sound();
+                                fistGet_Highest = true;
+                            }
+                        }
+                    }
+                    Present_Score.setScore(score, renderer);
+                    High_Score.setScore(highest_score, renderer);
+                    // Tăng tốc khi đạt điểm chia hết cho 15
+                    if (score != 0 && score % 15 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
+                        ball.SPEED_UP();
+                        base_ball.SPEED_UP();
+                        lastSpeedUpScore = score;
+                    }
+                    if (score != 0 && score % 5 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
+                        bullet.SetRandom_Position();
+                    }
+
+                    if (bullet.Spawn_Bullet()) {
+                        bullet.SetRandom_Position();
+                    }
+
+                    SDL_RenderClear(renderer);
+                    background.Render(renderer, NULL);
+                    Line.Render(renderer, NULL);
+                    Present_Score.Render(renderer, NULL);
+                    High_Score.Render(renderer, NULL);
+                    base_ball.Render(renderer, NULL);
+                    ball.Render(renderer, NULL);
+                    if (score >= 5) {
+                        bullet.Render(renderer, NULL);
+                        bullet.Bullet_Move();
+                    }
+                    SDL_RenderPresent(renderer);
+
+                    SDL_Delay(16);
+
+                    if (score == 0) {
+                        ball.Ball_START();
+                        continue;
+                    }
+
+                    ball.Ball_Move();
+                    base_ball.Player_Move();
+                }
+
+
+                if (quitGame) break;
+
+                bool waitForRestart = false;
+                lastToggleTime = SDL_GetTicks();
+                showText = true;
+                while (!waitForRestart) {
+                    SDL_Event e;
+                    while (SDL_PollEvent(&e)) {
+                        if (e.type == SDL_QUIT) {
+                            quitGame = true;
+                            waitForRestart = true;
+                        }
+                        if (e.type == SDL_KEYDOWN) {
+                            if (e.key.keysym.sym == SDLK_SPACE) {
+                                mode_1_Playround = true;
+                            }
+                            waitForRestart = true;
+                        }
+                    }//Quit luôn Game
+                    background.Render(renderer, NULL);
+                    Line.Render(renderer, NULL);
+                    base_ball.Render(renderer, NULL);
+                    ball.Render(renderer, NULL);
+                    Present_Score.setScore(score, renderer);
+                    Present_Score.Render(renderer, NULL);
+                    High_Score.setScore(highest_score, renderer);
+                    High_Score.Render(renderer, NULL);
+                    Back_to_menu_text.Render(renderer, NULL);
+
+                    Uint32 currentTime = SDL_GetTicks();
+                    if (currentTime - lastToggleTime >= 500) {
+                        showText = !showText;
+                        lastToggleTime = currentTime;
+                    }
+
+                    if (showText) {
+                        Text.loadText("Text/Retro Gaming.ttf", "TRY AGAIN!", renderer, 30);
+                        Text.getRect();
+                        Text.setRect(100, SCREEN_HEIGHT / 2.0 - 50);
+                        Text.Render(renderer, NULL);
+                    }
+                    SDL_RenderPresent(renderer);
+                    SDL_Delay(16);
+                }
+                if (quitGame) break;
             }
-
-            if (showText) {
-                Text.loadText("Text/Retro Gaming.ttf", "TRY AGAIN!", renderer, 30);
-                Text.getRect();
-                Text.setRect(100, SCREEN_HEIGHT / 2.0 - 50);
-                Text.Render(renderer, NULL);
-            }
-
-            SDL_RenderPresent(renderer);
-
-            SDL_Delay(16);
+            SDL_RenderClear(renderer);
         }
-
     }
 
     close();
@@ -278,11 +350,11 @@ void quitEvents(bool &quitGame, bool &otherFlag) {
 
 void resetGame() {
     score = 0;
-    base_ball.setRect(140, 500); // Reset vị trí thanh trượt
+    base_ball.setRect(140, 500); //Reset vị trí thanh trượt
     base_ball.Reset_SPEED();
-    ball.setRect(SCREEN_WIDTH / 2.0 - 10, SCREEN_HEIGHT / 2.0); // Reset vị trí bóng
+    ball.setRect(SCREEN_WIDTH / 2.0 - 10, SCREEN_HEIGHT / 2.0); //Reset vị trí bóng
     ball.Reset_SPEED();
-    ball.Ball_START();            // Khởi động lại bóng
+    ball.Ball_START(); //Khởi động lại bóng
 }
 
 
@@ -325,7 +397,7 @@ public:
     }
 
     void jump() {
-        velocity = -100;
+        velocity = -10;
     }
 
     void update() {
