@@ -29,6 +29,14 @@ void Player::Player_Move() {
         if (base_x > SCREEN_WIDTH - rect_.w)
             base_x = SCREEN_WIDTH - rect_.w;
     }
+    if (keyStates[SDL_SCANCODE_SPACE]) {
+        if (base_x + rect_.w/2 < SCREEN_WIDTH/2) {
+            base_x = SCREEN_WIDTH - rect_.w;
+        }
+        if (base_x + rect_.w/2 >= SCREEN_WIDTH/2) {
+            base_x = 0;
+        }
+    }
 
     rect_.x = base_x;
     rect_.y = base_y;
@@ -58,6 +66,13 @@ void Player::Ball_Move() {
     if (rect_.y >= SCREEN_HEIGHT - rect_.h || rect_.y <= 0) {
         speed_.y *= -1;
     }
+}
+
+void Player::Rand_Angle(Player &BaseBall) {
+    random_device rd;
+    static mt19937 gen(rd());
+    uniform_real_distribution<float> dist(-1.00f, 1.00f);
+    speed_.x += dist(gen);
 }
 
 void Player::Bouncing() {

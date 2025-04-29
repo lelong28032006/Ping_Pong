@@ -9,25 +9,32 @@ const char* WINDOW_TITLE = "Ping Pong Ching Chong";
 
 BaseObject background;
 BaseObject Line;
+BaseObject Line2;
 BaseObject Text;
 BaseObject Present_Score;
 BaseObject High_Score;
 BaseObject Mode_1_Text;
 BaseObject Mode_2_Text;
+BaseObject Player1_win_round;
+BaseObject Player2_win_round;
 BaseObject Back_to_menu_text;
 BaseObject Menu_Arrow;
 Player ball;
 Player base_ball;
+Player base_ball2;
 Player bullet;
 
 int score = 0;
 int highest_score = 0;
+int player1_win_round = 0;
+int player2_win_round = 0;
 
 
 bool initData();
 bool loadbackground();
 void waitUntilKeyPressed();
 void quitEvents(bool &quitGame, bool &otherFlag);
+void resetRoundState();
 void resetGame();
 void close();
 
@@ -41,6 +48,10 @@ int main(int argc, char *argv[]) {
     base_ball.getRect();
     base_ball.setRect(140, 500);
 
+    base_ball2.loadIMG("Images/base(1).jpg", renderer);
+    base_ball2.getRect();
+    base_ball2.setRect(140, 80);
+
     ball.loadIMG("Images/ball(1).png", renderer);
     ball.getRect();
     ball.setRect(SCREEN_WIDTH / 2.0 - 10, SCREEN_HEIGHT / 2.0);
@@ -48,6 +59,10 @@ int main(int argc, char *argv[]) {
     Line.loadIMG("Images/Line.png", renderer);
     Line.getRect();
     Line.setRect(0, 500);
+
+    Line2.loadIMG("Images/Line.png", renderer);
+    Line2.getRect();
+    Line2.setRect(0, 80);
 
     bullet.loadIMG("Images/bullet.png", renderer);
     bullet.getRect();
@@ -78,6 +93,12 @@ int main(int argc, char *argv[]) {
 
     High_Score.getRect();
     High_Score.setRect(15, 50);
+
+    Player1_win_round.getRect();
+    Player1_win_round.setRect(180, 10);
+
+    Player2_win_round.getRect();
+    Player2_win_round.setRect(180, 540);
 
     bool quitGame = false; // Khi nào thật sự muốn thoát game
     while (!quitGame) {
@@ -131,9 +152,9 @@ int main(int argc, char *argv[]) {
                     background.Render(renderer, NULL);
                     Line.Render(renderer, NULL);
                     base_ball.Render(renderer, NULL);
-                    Present_Score.setScore(score, renderer);
+                    Present_Score.setScore(score, renderer, 4, 30);
                     Present_Score.Render(renderer, NULL);
-                    High_Score.setScore(highest_score, renderer);
+                    High_Score.setScore(highest_score, renderer, 4, 30);
                     High_Score.Render(renderer, NULL);
 
                     Uint32 currentTime = SDL_GetTicks();
@@ -165,13 +186,14 @@ int main(int argc, char *argv[]) {
                             quitRound = true;
                         }
                     }
-                    if (Line.EndOfTheGame(ball) || base_ball.Base_Touch(bullet)) {
+                    if (Line.Cross_the_line(ball) || base_ball.Base_Touch(bullet)) {
                         quitRound = true;
                         break; // Ra khỏi vòng chơi chính
                     }
 
                     if (base_ball.Base_Touch(ball)) {
                         Play_Paddle_Hit_Sound();
+                        ball.Rand_Angle(base_ball);
                         ball.Bouncing();
                         score++;
                         if (score > highest_score) {
@@ -182,8 +204,8 @@ int main(int argc, char *argv[]) {
                             }
                         }
                     }
-                    Present_Score.setScore(score, renderer);
-                    High_Score.setScore(highest_score, renderer);
+                    Present_Score.setScore(score, renderer, 4, 30);
+                    High_Score.setScore(highest_score, renderer, 4, 30);
                     // Tăng tốc khi đạt điểm chia hết cho 15
                     if (score != 0 && score % 15 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
                         ball.SPEED_UP();
@@ -246,9 +268,9 @@ int main(int argc, char *argv[]) {
                     Line.Render(renderer, NULL);
                     base_ball.Render(renderer, NULL);
                     ball.Render(renderer, NULL);
-                    Present_Score.setScore(score, renderer);
+                    Present_Score.setScore(score, renderer, 4, 30);
                     Present_Score.Render(renderer, NULL);
-                    High_Score.setScore(highest_score, renderer);
+                    High_Score.setScore(highest_score, renderer, 4, 30);
                     High_Score.Render(renderer, NULL);
                     Back_to_menu_text.Render(renderer, NULL);
 
@@ -266,6 +288,142 @@ int main(int argc, char *argv[]) {
                     }
                     SDL_RenderPresent(renderer);
                     SDL_Delay(16);
+                }
+                if (quitGame) break;
+            }
+            SDL_RenderClear(renderer);
+        }
+        if (game_mode == 1) {
+            bool mode_2_Playround = false;
+            while (!mode_2_Playround) {
+                if (player1_win_round == 3 || player2_win_round == 3) resetGame(); //Reset thông số cho ván mới
+                resetRoundState();
+                bool begin = false;
+                Uint32 lastToggleTime = SDL_GetTicks();
+                bool showText = true;
+                while (!begin) {
+                    quitEvents(quitGame, begin); //Quit luôn Game
+                    background.Render(renderer, NULL);
+                    Line.Render(renderer, NULL);
+                    Line2.Render(renderer, NULL);
+                    base_ball.Render(renderer, NULL);
+                    base_ball2.Render(renderer, NULL);
+                    Player1_win_round.setScore(player1_win_round, renderer, 1, 40);
+                    Player2_win_round.setScore(player2_win_round, renderer, 1, 40);
+                    Player1_win_round.Render(renderer, NULL);
+                    Player2_win_round.Render(renderer, NULL);
+
+                    Uint32 currentTime = SDL_GetTicks();
+                    if (currentTime - lastToggleTime >= 500) {
+                        showText = !showText;
+                        lastToggleTime = currentTime;
+                    }
+
+                    if (showText) {
+                        Text.loadText("Text/Retro Gaming.ttf", "PRESS ANY KEY", renderer, 30);
+                        Text.getRect();
+                        Text.setRect(65, SCREEN_HEIGHT / 2.0 - 50);
+                        Text.Render(renderer, NULL);
+                    }
+                    SDL_RenderPresent(renderer);
+                    SDL_Delay(16);
+                }
+                if (quitGame) break;
+                bool quitRound = false; // Vòng lặp chính của game
+                bool start = true;
+                while (!quitRound) {
+                    while (SDL_PollEvent(&event)) {
+                        if (event.type == SDL_QUIT) {
+                            quitGame = true;
+                            quitRound = true;
+                        }
+                    }
+                    if (Line.Cross_the_line(ball)) {
+                        player1_win_round++;
+                        Play_Get_HighScore_Sound();
+                        break; // Ra khỏi vòng chơi chính
+                    }
+                    if (Line2.Cross_the_top_line(ball)) {
+                        player2_win_round++;
+                        Play_Get_HighScore_Sound();
+                        break;
+                    }
+                    if (base_ball.Base_Touch(ball) || base_ball2.Base_Touch(ball)) {
+                        Play_Paddle_Hit_Sound();
+                        ball.Rand_Angle(base_ball);
+                        ball.Bouncing();
+
+                    }
+                    Player1_win_round.setScore(player1_win_round, renderer, 1, 40);
+                    Player2_win_round.setScore(player2_win_round, renderer, 1, 40);
+
+                    SDL_RenderClear(renderer);
+                    background.Render(renderer, NULL);
+                    Line.Render(renderer, NULL);
+                    Line2.Render(renderer, NULL);
+                    Player1_win_round.Render(renderer, NULL);
+                    Player2_win_round.Render(renderer, NULL);
+                    base_ball.Render(renderer, NULL);
+                    base_ball2.Render(renderer, NULL);
+                    ball.Render(renderer, NULL);
+
+                    SDL_RenderPresent(renderer);
+
+                    SDL_Delay(16);
+
+                    if (base_ball.Base_Touch(ball)) {
+                        start = false;
+                    }
+                    if (start) {
+                        ball.Ball_START();
+                        continue;
+                    }
+
+                    ball.Ball_Move();
+                    base_ball.Player_Move();
+                }
+                if (quitGame) break;
+                if (player1_win_round == 3 || player2_win_round == 3) {
+                    if (player1_win_round == 3) {
+                        Text.loadText("Text/Retro Gaming.ttf", "YOU LOSE!!!", renderer, 40);
+                        Text.getRect();
+                        Text.setRect(65, SCREEN_HEIGHT / 2.0 - 50);
+                    }
+                    else if (player2_win_round == 3) {
+                        Text.loadText("Text/Retro Gaming.ttf", "YOU WIN!!!", renderer, 40);
+                        Text.getRect();
+                        Text.setRect(75, SCREEN_HEIGHT / 2.0 - 50);
+                    }
+                    bool waitForRestart = false;
+                    while (!waitForRestart) {
+                        SDL_Event e;
+                        while (SDL_PollEvent(&e)) {
+                            if (e.type == SDL_QUIT) {
+                                quitGame = true;
+                                waitForRestart = true;
+                            }
+                            if (e.type == SDL_KEYDOWN) {
+                                if (e.key.keysym.sym == SDLK_SPACE) {
+                                    mode_2_Playround = true;
+                                }
+                                waitForRestart = true;
+                            }
+                        }//Quit luôn Game
+                        SDL_RenderClear(renderer);
+                        background.Render(renderer, NULL);
+                        Line.Render(renderer, NULL);
+                        Line2.Render(renderer, NULL);
+                        Player1_win_round.setScore(player1_win_round, renderer, 1, 40);
+                        Player2_win_round.setScore(player2_win_round, renderer, 1, 40);
+                        Player1_win_round.Render(renderer, NULL);
+                        Player2_win_round.Render(renderer, NULL);
+                        base_ball.Render(renderer, NULL);
+                        base_ball2.Render(renderer, NULL);
+                        Text.Render(renderer, NULL);
+                        Back_to_menu_text.Render(renderer, NULL);
+                        SDL_RenderPresent(renderer);
+                        SDL_Delay(16);
+                    }
                 }
                 if (quitGame) break;
             }
@@ -347,14 +505,21 @@ void quitEvents(bool &quitGame, bool &otherFlag) {
     }
 }
 
-
-void resetGame() {
-    score = 0;
+void resetRoundState() {
     base_ball.setRect(140, 500); //Reset vị trí thanh trượt
     base_ball.Reset_SPEED();
+    base_ball2.setRect(140, 80); //Reset vị trí thanh trượt
+    base_ball2.Reset_SPEED();
     ball.setRect(SCREEN_WIDTH / 2.0 - 10, SCREEN_HEIGHT / 2.0); //Reset vị trí bóng
     ball.Reset_SPEED();
     ball.Ball_START(); //Khởi động lại bóng
+}
+
+void resetGame() {
+    score = 0;
+    player1_win_round = 0;
+    player2_win_round = 0;
+    resetRoundState();
 }
 
 
@@ -368,125 +533,3 @@ void close() {
     IMG_Quit();
     SDL_Quit();
 }
-
-
-
-/*
-// FLAPPY
-#include <SDL.h>
-#include <iostream>
-#include <vector>
-#include <cstdlib>
-#include <ctime>
-
-const int SCREEN_WIDTH = 400;
-const int SCREEN_HEIGHT = 600;
-const int BIRD_WIDTH = 20;
-const int BIRD_HEIGHT = 20;
-const int PIPE_WIDTH = 50;
-const int PIPE_GAP = 150;
-
-class Bird {
-public:
-    int x, y, velocity;
-
-    Bird() {
-        x = 50;
-        y = SCREEN_HEIGHT / 2;
-        velocity = 0;
-    }
-
-    void jump() {
-        velocity = -10;
-    }
-
-    void update() {
-        velocity += 1; // Gravity
-        y += velocity;
-    }
-
-    void draw(SDL_Renderer* renderer) {
-        SDL_Rect birdRect = { x, y, BIRD_WIDTH, BIRD_HEIGHT };
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderFillRect(renderer, &birdRect);
-    }
-};
-
-class Pipe {
-public:
-    int x, height;
-
-    Pipe() {
-        x = SCREEN_WIDTH;
-        height = rand() % (SCREEN_HEIGHT - PIPE_GAP - 100) + 50; // Random height
-    }
-
-    void update() {
-        x -= 5; // Move left
-    }
-
-    void draw(SDL_Renderer* renderer) {
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-        SDL_Rect topPipe = { x, 0, PIPE_WIDTH, height };
-        SDL_Rect bottomPipe = { x, height + PIPE_GAP, PIPE_WIDTH, SCREEN_HEIGHT - height - PIPE_GAP };
-        SDL_RenderFillRect(renderer, &topPipe);
-        SDL_RenderFillRect(renderer, &bottomPipe);
-    }
-};
-
-int main(int argc, char* argv[]) {
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window* window = SDL_CreateWindow("Flappy Bird Clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-
-    Bird bird;
-    std::vector<Pipe> pipes;
-    pipes.push_back(Pipe());
-
-    bool running = true;
-    SDL_Event event;
-
-    while (running) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = false;
-            }
-            if (event.type == SDL_KEYDOWN) {
-                if (event.key.keysym.sym == SDLK_SPACE) {
-                    bird.jump();
-                }
-            }
-        }
-
-        bird.update();
-
-        if (pipes.back().x < SCREEN_WIDTH - 200) {
-            pipes.push_back(Pipe());
-        }
-
-        for (auto& pipe : pipes) {
-            pipe.update();
-        }
-
-        // Clear screen
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderClear(renderer);
-
-        // Draw bird
-        bird.draw(renderer);
-
-        // Draw pipes
-        for (auto& pipe : pipes) {
-            pipe.draw(renderer);
-        }
-
-        // Present the back buffer
-        SDL_RenderPresent(renderer);
-        SDL_Delay(16); // ~60 FPS
-    }
-
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-    return 0;
-}*/

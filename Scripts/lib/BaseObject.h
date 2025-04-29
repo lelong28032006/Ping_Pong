@@ -9,8 +9,8 @@
 using namespace std;
 
 struct Vector2 {
-    int x;
-    int y;
+    double x;
+    double y;
 };
 
 class BaseObject
@@ -32,9 +32,10 @@ public:
     bool loadText(char* s,char* word, SDL_Renderer* renderer, int size);
     bool loadIMG(char* s, SDL_Renderer* renderer);
     void Render(SDL_Renderer* des, const SDL_Rect* clip = NULL);
-    void setScore(int s, SDL_Renderer* renderer);
+    void setScore(int s, SDL_Renderer* renderer, int score_long, int size);
     void START();
-    bool EndOfTheGame(BaseObject &ball);
+    bool Cross_the_line(BaseObject &ball);
+    bool Cross_the_top_line(BaseObject &ball);
     void Free();
 
 protected:

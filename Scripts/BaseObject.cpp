@@ -69,15 +69,15 @@ bool BaseObject::loadText(char *s,char * word, SDL_Renderer *renderer, int size)
     return texture_ != NULL;
 }
 
-void BaseObject::setScore(int s, SDL_Renderer *renderer) {
+void BaseObject::setScore(int s, SDL_Renderer *renderer, int score_long, int size) {
     score_ = s;
     string text = "";
     string a = to_string(score_);
-    for (int i = 0; i < 4-a.length(); i++) {
+    for (int i = 0; i < score_long-a.length(); i++) {
         text += '0';
     }
     text += a;
-    loadText("Text/Retro Gaming.ttf", (char*)text.c_str(), renderer, 30);
+    loadText("Text/Retro Gaming.ttf", (char*)text.c_str(), renderer, size);
 }
 
 
@@ -95,8 +95,15 @@ void BaseObject::Free() {
     }
 }
 
-bool BaseObject::EndOfTheGame(BaseObject &ball) {
+bool BaseObject::Cross_the_line(BaseObject &ball) {
     if (rect_.y < ball.rect_.y + ball.rect_.h -1) {
+        return true;
+    }
+    return false;
+}
+
+bool BaseObject::Cross_the_top_line(BaseObject &ball) {
+    if (rect_.y > ball.rect_.y -1) {
         return true;
     }
     return false;

@@ -16,6 +16,7 @@ class Player : public BaseObject {
     void Player_Move();
     bool Base_Touch(Player& somthing);
     void SPEED_UP();
+    void Rand_Angle(Player &BaseBall);
     void Bouncing();
     void Ball_Move();
     void Ball_START();
