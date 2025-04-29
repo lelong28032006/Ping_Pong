@@ -331,6 +331,8 @@ int main(int argc, char *argv[]) {
                 if (quitGame) break;
                 bool quitRound = false; // Vòng lặp chính của game
                 bool start = true;
+                int count_touch = 0;
+                int last_speed_up = 0;
                 while (!quitRound) {
                     while (SDL_PollEvent(&event)) {
                         if (event.type == SDL_QUIT) {
@@ -371,7 +373,13 @@ int main(int argc, char *argv[]) {
 
                     SDL_Delay(16);
 
+                    if (count_touch %10 == 0 && count_touch > 0 && count_touch != last_speed_up) {
+                        last_speed_up = count_touch;
+                        ball.SPEED_UP();
+                    }
+
                     if (base_ball.Base_Touch(ball)) {
+                        count_touch++;
                         start = false;
                     }
                     if (start) {
@@ -381,6 +389,7 @@ int main(int argc, char *argv[]) {
 
                     ball.Ball_Move();
                     base_ball.Player_Move();
+                    base_ball2.Chasing(ball);
                 }
                 if (quitGame) break;
                 if (player1_win_round == 3 || player2_win_round == 3) {
@@ -521,7 +530,6 @@ void resetGame() {
     player2_win_round = 0;
     resetRoundState();
 }
-
 
 void close() {
     background.Free();

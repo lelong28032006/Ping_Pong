@@ -14,7 +14,7 @@ class Player : public BaseObject {
     Player();
     virtual ~Player();
     void Player_Move();
-    bool Base_Touch(Player& somthing);
+    bool Base_Touch(Player &somthing);
     void SPEED_UP();
     void Rand_Angle(Player &BaseBall);
     void Bouncing();
@@ -24,6 +24,7 @@ class Player : public BaseObject {
     void SetRandom_Position();
     void Bullet_Move();
     bool Spawn_Bullet();
+    void Chasing(Player &something);
 };
 
 #endif //PLAYER_H

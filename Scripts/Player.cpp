@@ -107,3 +107,18 @@ bool Player::Spawn_Bullet() {
     }
     return false;
 }
+
+void Player::Chasing(Player &something) {
+    if (rect_.x + rect_.w/2 > something.rect_.x) {
+        rect_.x -= speed_.x;
+        if (rect_.x > SCREEN_WIDTH - rect_.w)
+            rect_.x = SCREEN_WIDTH - rect_.w;
+    }
+    if (rect_.x + rect_.w/2 < something.rect_.x) {
+        rect_.x += speed_.x;
+        if (rect_.x < 0) rect_.x = 0; // Giữ paddle trong màn hình
+    }
+    if (rect_.x > SCREEN_WIDTH - rect_.w)
+        rect_.x = SCREEN_WIDTH - rect_.w;
+    if (rect_.x < 0) rect_.x = 0; // Giữ paddle trong màn hình
+}
