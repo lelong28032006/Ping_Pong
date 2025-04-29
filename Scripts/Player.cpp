@@ -42,6 +42,34 @@ void Player::Player_Move() {
     rect_.y = base_y;
 }
 
+void Player::Player2_Move() {
+    int base_x = rect_.x;
+    int base_y = rect_.y;
+    const int base_SPEED = speed_.x;
+    const Uint8* keyStates = SDL_GetKeyboardState(NULL);
+    if (keyStates[SDL_SCANCODE_A]) {
+        base_x -= base_SPEED;
+        if (base_x < 0) base_x = 0; // Giữ paddle trong màn hình
+        //cout << "A" << endl;
+    }
+    if (keyStates[SDL_SCANCODE_D]) {
+        base_x += base_SPEED;
+        if (base_x > SCREEN_WIDTH - rect_.w)
+            base_x = SCREEN_WIDTH - rect_.w;
+        //cout << "D" << endl;
+    }
+    if (keyStates[SDL_SCANCODE_SPACE]) {
+        if (base_x + rect_.w/2 < SCREEN_WIDTH/2) {
+            base_x = SCREEN_WIDTH - rect_.w;
+        }
+        if (base_x + rect_.w/2 >= SCREEN_WIDTH/2) {
+            base_x = 0;
+        }
+    }
+    rect_.x = base_x;
+    rect_.y = base_y;
+}
+
 bool Player::Base_Touch(Player &something) {
     if (rect_.x + rect_.w >= something.rect_.x && rect_.x <= something.rect_.x + something.rect_.w &&
         rect_.y - something.rect_.h <= something.rect_.y && rect_.y + rect_.h >= something.rect_.y) {
@@ -51,10 +79,10 @@ bool Player::Base_Touch(Player &something) {
 }
 
 void Player::SPEED_UP() {
-    if (speed_.y > 0) speed_.y += 2.00f;
-    else speed_.y -= 2.00f;
-    if (speed_.x > 0) speed_.x += 2.00f;
-    else speed_.x -= 2.00f;
+    if (speed_.y > 0) speed_.y += 1.00f;
+    else speed_.y -= 1.00f;
+    if (speed_.x > 0) speed_.x += 1.00f;
+    else speed_.x -= 1.00f;
 }
 
 void Player::Ball_Move() {

@@ -15,6 +15,7 @@ BaseObject Present_Score;
 BaseObject High_Score;
 BaseObject Mode_1_Text;
 BaseObject Mode_2_Text;
+BaseObject Mode_3_Text;
 BaseObject Player1_win_round;
 BaseObject Player2_win_round;
 BaseObject Back_to_menu_text;
@@ -73,20 +74,28 @@ int main(int argc, char *argv[]) {
     Mode_1_Text.loadText("Text/Retro Gaming.ttf", "1 PLAYER", renderer, 30);
     Mode_1_Text.getRect();
     Mode_1_Text.setRect(120, SCREEN_HEIGHT / 2.0);
-    Mode_2_Text.loadText("Text/Retro Gaming.ttf", "2 PLAYER", renderer, 30);
+    Mode_2_Text.loadText("Text/Retro Gaming.ttf", "YOU v BOT", renderer, 30);
     Mode_2_Text.getRect();
     Mode_2_Text.setRect(120, SCREEN_HEIGHT / 2.0 + 60);
+    Mode_3_Text.loadText("Text/Retro Gaming.ttf", "2 PLAYER", renderer, 30);
+    Mode_3_Text.getRect();
+    Mode_3_Text.setRect(120, SCREEN_HEIGHT / 2.0 + 120);
     Back_to_menu_text.loadText("Text/Retro Gaming.ttf", "PRESS SPACE: MENU", renderer, 12);
     Back_to_menu_text.getRect();
     Back_to_menu_text.setRect(125, SCREEN_HEIGHT / 2.0 + 60);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
-    SDL_Rect blackSquare; //Tạo hình vuông màu đen
-    blackSquare.x = 60;
-    blackSquare.y = SCREEN_HEIGHT / 2.0 + 5 + 60;
-    blackSquare.w = 30;
-    blackSquare.h = 30;
+    SDL_Rect blackSquare1, blackSquare2; //Tạo hình vuông màu đen
+    blackSquare1.x = 60;
+    blackSquare1.y = SCREEN_HEIGHT / 2.0 + 5 + 60;
+    blackSquare1.w = 30;
+    blackSquare1.h = 30;
+
+    blackSquare2.x = 60;
+    blackSquare2.y = SCREEN_HEIGHT / 2.0 + 5 + 120;
+    blackSquare2.w = 30;
+    blackSquare2.h = 30;
 
     Present_Score.getRect();
     Present_Score.setRect(15, 15);
@@ -116,14 +125,34 @@ int main(int argc, char *argv[]) {
                         menu = true; // Ấn Enter để chọn chế độ
                     }
                     if (e.key.keysym.sym == SDLK_DOWN) {
-                        blackSquare.y = SCREEN_HEIGHT / 2.0 + 5;
-                        Menu_Arrow.setRect(60, SCREEN_HEIGHT / 2.0 + 5 + 60);
-                        game_mode = 1;
+                        if (game_mode == 1) {
+                            blackSquare1.y = SCREEN_HEIGHT / 2.0 + 5;
+                            blackSquare2.y = SCREEN_HEIGHT / 2.0 + 5 + 60;
+                            Menu_Arrow.setRect(60, SCREEN_HEIGHT / 2.0 + 5 + 120);
+                            game_mode = 2;
+                            continue;
+                        }
+                        if (game_mode == 0) {
+                            blackSquare1.y = SCREEN_HEIGHT / 2.0 + 5;
+                            blackSquare2.y = SCREEN_HEIGHT / 2.0 + 5 + 120;
+                            Menu_Arrow.setRect(60, SCREEN_HEIGHT / 2.0 + 5 + 60);
+                            game_mode = 1;
+                            continue;
+                        }
                     }
                     if (e.key.keysym.sym == SDLK_UP) {
-                        blackSquare.y = SCREEN_HEIGHT / 2.0 + 5 + 60;
-                        Menu_Arrow.setRect(60, SCREEN_HEIGHT / 2.0 + 5);
-                        game_mode = 0;
+                        if (game_mode == 1) {
+                            blackSquare1.y = SCREEN_HEIGHT / 2.0 + 5 + 60;
+                            blackSquare2.y = SCREEN_HEIGHT / 2.0 + 5 + 120;
+                            Menu_Arrow.setRect(60, SCREEN_HEIGHT / 2.0 + 5);
+                            game_mode = 0;
+                        }
+                        if (game_mode == 2) {
+                            blackSquare1.y = SCREEN_HEIGHT / 2.0 + 5;
+                            blackSquare2.y = SCREEN_HEIGHT / 2.0 + 5 + 120;
+                            Menu_Arrow.setRect(60, SCREEN_HEIGHT / 2.0 + 5 + 60);
+                            game_mode = 1;
+                        }
                     }
                 }
             }
@@ -133,8 +162,10 @@ int main(int argc, char *argv[]) {
             Text.Render(renderer);
             Mode_1_Text.Render(renderer);
             Mode_2_Text.Render(renderer);
+            Mode_3_Text.Render(renderer);
             Menu_Arrow.Render(renderer);
-            SDL_RenderFillRect(renderer, &blackSquare);
+            SDL_RenderFillRect(renderer, &blackSquare1);
+            SDL_RenderFillRect(renderer, &blackSquare2);
             SDL_RenderPresent(renderer);
         }
         if (quitGame) break;
@@ -438,8 +469,152 @@ int main(int argc, char *argv[]) {
             }
             SDL_RenderClear(renderer);
         }
-    }
+        if (game_mode == 2) {
+            bool mode_3_Playround = false;
+            while (!mode_3_Playround) {
+                if (player1_win_round == 3 || player2_win_round == 3) resetGame(); //Reset thông số cho ván mới
+                resetRoundState();
+                bool begin = false;
+                Uint32 lastToggleTime = SDL_GetTicks();
+                bool showText = true;
+                while (!begin) {
+                    quitEvents(quitGame, begin); //Quit luôn Game
+                    background.Render(renderer, NULL);
+                    Line.Render(renderer, NULL);
+                    Line2.Render(renderer, NULL);
+                    base_ball.Render(renderer, NULL);
+                    base_ball2.Render(renderer, NULL);
+                    Player1_win_round.setScore(player1_win_round, renderer, 1, 40);
+                    Player2_win_round.setScore(player2_win_round, renderer, 1, 40);
+                    Player1_win_round.Render(renderer, NULL);
+                    Player2_win_round.Render(renderer, NULL);
 
+                    Uint32 currentTime = SDL_GetTicks();
+                    if (currentTime - lastToggleTime >= 500) {
+                        showText = !showText;
+                        lastToggleTime = currentTime;
+                    }
+
+                    if (showText) {
+                        Text.loadText("Text/Retro Gaming.ttf", "PRESS ANY KEY", renderer, 30);
+                        Text.getRect();
+                        Text.setRect(65, SCREEN_HEIGHT / 2.0 - 50);
+                        Text.Render(renderer, NULL);
+                    }
+                    SDL_RenderPresent(renderer);
+                    SDL_Delay(16);
+                }
+                if (quitGame) break;
+                bool quitRound = false; // Vòng lặp chính của game
+                bool start = true;
+                int count_touch = 0;
+                int last_speed_up = 0;
+                while (!quitRound) {
+                    while (SDL_PollEvent(&event)) {
+                        if (event.type == SDL_QUIT) {
+                            quitGame = true;
+                            quitRound = true;
+                        }
+                    }
+                    if (Line.Cross_the_line(ball)) {
+                        player1_win_round++;
+                        Play_Get_HighScore_Sound();
+                        break; // Ra khỏi vòng chơi chính
+                    }
+                    if (Line2.Cross_the_top_line(ball)) {
+                        player2_win_round++;
+                        Play_Get_HighScore_Sound();
+                        break;
+                    }
+                    if (base_ball.Base_Touch(ball) || base_ball2.Base_Touch(ball)) {
+                        Play_Paddle_Hit_Sound();
+                        ball.Rand_Angle(base_ball);
+                        ball.Bouncing();
+
+                    }
+                    Player1_win_round.setScore(player1_win_round, renderer, 1, 40);
+                    Player2_win_round.setScore(player2_win_round, renderer, 1, 40);
+
+                    SDL_RenderClear(renderer);
+                    background.Render(renderer, NULL);
+                    Line.Render(renderer, NULL);
+                    Line2.Render(renderer, NULL);
+                    Player1_win_round.Render(renderer, NULL);
+                    Player2_win_round.Render(renderer, NULL);
+                    base_ball.Render(renderer, NULL);
+                    base_ball2.Render(renderer, NULL);
+                    ball.Render(renderer, NULL);
+
+                    SDL_RenderPresent(renderer);
+
+                    SDL_Delay(16);
+
+                    if (count_touch %10 == 0 && count_touch > 0 && count_touch != last_speed_up) {
+                        last_speed_up = count_touch;
+                        ball.SPEED_UP();
+                    }
+
+                    if (base_ball.Base_Touch(ball)) {
+                        count_touch++;
+                        start = false;
+                    }
+                    if (start) {
+                        ball.Ball_START();
+                        continue;
+                    }
+                    SDL_PumpEvents();
+                    ball.Ball_Move();
+                    base_ball.Player_Move();
+                    base_ball2.Player2_Move();
+                }
+                if (quitGame) break;
+                if (player1_win_round == 3 || player2_win_round == 3) {
+                    if (player1_win_round == 3) {
+                        Text.loadText("Text/Retro Gaming.ttf", "PLAYER 1 WIN", renderer, 40);
+                        Text.getRect();
+                        Text.setRect(35, SCREEN_HEIGHT / 2.0 - 50);
+                    }
+                    else if (player2_win_round == 3) {
+                        Text.loadText("Text/Retro Gaming.ttf", "PLAYER 2 WIN", renderer, 40);
+                        Text.getRect();
+                        Text.setRect(35, SCREEN_HEIGHT / 2.0 - 50);
+                    }
+                    bool waitForRestart = false;
+                    while (!waitForRestart) {
+                        SDL_Event e;
+                        while (SDL_PollEvent(&e)) {
+                            if (e.type == SDL_QUIT) {
+                                quitGame = true;
+                                waitForRestart = true;
+                            }
+                            if (e.type == SDL_KEYDOWN) {
+                                if (e.key.keysym.sym == SDLK_SPACE) {
+                                    mode_3_Playround = true;
+                                }
+                                waitForRestart = true;
+                            }
+                        }//Quit luôn Game
+                        SDL_RenderClear(renderer);
+                        background.Render(renderer, NULL);
+                        Line.Render(renderer, NULL);
+                        Line2.Render(renderer, NULL);
+                        Player1_win_round.setScore(player1_win_round, renderer, 1, 40);
+                        Player2_win_round.setScore(player2_win_round, renderer, 1, 40);
+                        Player1_win_round.Render(renderer, NULL);
+                        Player2_win_round.Render(renderer, NULL);
+                        base_ball.Render(renderer, NULL);
+                        base_ball2.Render(renderer, NULL);
+                        Text.Render(renderer, NULL);
+                        Back_to_menu_text.Render(renderer, NULL);
+                        SDL_RenderPresent(renderer);
+                        SDL_Delay(16);
+                    }
+                }
+                if (quitGame) break;
+            }
+            SDL_RenderClear(renderer);
+        }
+    }
     close();
     return 0;
 }

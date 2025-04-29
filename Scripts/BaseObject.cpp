@@ -96,14 +96,14 @@ void BaseObject::Free() {
 }
 
 bool BaseObject::Cross_the_line(BaseObject &ball) {
-    if (rect_.y < ball.rect_.y + ball.rect_.h -1) {
+    if (rect_.y < ball.rect_.y + ball.rect_.h -5) {
         return true;
     }
     return false;
 }
 
 bool BaseObject::Cross_the_top_line(BaseObject &ball) {
-    if (rect_.y > ball.rect_.y -1) {
+    if (rect_.y > ball.rect_.y -5) {
         return true;
     }
     return false;

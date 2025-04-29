@@ -14,6 +14,7 @@ class Player : public BaseObject {
     Player();
     virtual ~Player();
     void Player_Move();
+    void Player2_Move();
     bool Base_Touch(Player &somthing);
     void SPEED_UP();
     void Rand_Angle(Player &BaseBall);
