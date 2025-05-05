@@ -8,12 +8,14 @@
 #include "DEFS.h"
 
 extern Mix_Music* Theme;
+extern Mix_Chunk* Select_mode;
 extern Mix_Chunk* Paddle_Hit;
 extern Mix_Chunk* Get_HighScore;
 
 bool init_Audio();
 void close_Audio();
 void Play_Theme_Music();
+void Play_Select_Sound();
 void Play_Paddle_Hit_Sound();
 void Play_Get_HighScore_Sound();
 

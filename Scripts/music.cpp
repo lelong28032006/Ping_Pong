@@ -7,6 +7,7 @@
 using namespace std;
 
 Mix_Music* Theme = NULL;
+Mix_Chunk* Select_mode = NULL;
 Mix_Chunk* Paddle_Hit = NULL;
 Mix_Chunk* Get_HighScore = NULL;
 
@@ -15,7 +16,6 @@ bool init_Audio() {
         printf("SDL_mixer Lỗi: %s\n", Mix_GetError());
         return false;
     }
-
 
     Paddle_Hit = Mix_LoadWAV("Music/Paddle hit.wav");
     if (!Paddle_Hit) {
@@ -26,6 +26,12 @@ bool init_Audio() {
     Get_HighScore = Mix_LoadWAV("Music/Score Blink.wav");
     if (!Get_HighScore) {
         printf("Can't load High Score Sound! %s\n", Mix_GetError());
+        return false;
+    }
+
+    Select_mode = Mix_LoadWAV("Music/Select_game_mode.wav");
+    if (!Select_mode) {
+        printf("Can't load Select game mode Sound! %s\n", Mix_GetError());
         return false;
     }
 
@@ -50,4 +56,8 @@ void Play_Paddle_Hit_Sound() {
 
 void Play_Get_HighScore_Sound() {
     Mix_PlayChannel(-1, Get_HighScore, 0);
+}
+
+void Play_Select_Sound() {
+    Mix_PlayChannel(-1, Select_mode, 0);
 }

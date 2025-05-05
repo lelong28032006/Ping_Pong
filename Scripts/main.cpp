@@ -122,6 +122,7 @@ int main(int argc, char *argv[]) {
                 }
                 if (e.type == SDL_KEYDOWN) {
                     if (e.key.keysym.sym == SDLK_RETURN) {
+                        Play_Select_Sound();
                         menu = true; // Ấn Enter để chọn chế độ
                     }
                     if (e.key.keysym.sym == SDLK_DOWN) {
@@ -238,18 +239,18 @@ int main(int argc, char *argv[]) {
                     Present_Score.setScore(score, renderer, 4, 30);
                     High_Score.setScore(highest_score, renderer, 4, 30);
                     // Tăng tốc khi đạt điểm chia hết cho 15
-                    if (score != 0 && score % 15 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
+                    if (score != 0 && score % 10 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
                         ball.SPEED_UP();
                         base_ball.SPEED_UP();
                         lastSpeedUpScore = score;
                     }
-                    if (score != 0 && score % 5 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
+                    /*if (score != 0 && score % 5 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
                         bullet.SetRandom_Position();
-                    }
+                    }*/
 
-                    if (bullet.Spawn_Bullet()) {
+                    /*if (bullet.Spawn_Bullet()) {
                         bullet.SetRandom_Position();
-                    }
+                    }*/
 
                     SDL_RenderClear(renderer);
                     background.Render(renderer, NULL);
@@ -258,10 +259,10 @@ int main(int argc, char *argv[]) {
                     High_Score.Render(renderer, NULL);
                     base_ball.Render(renderer, NULL);
                     ball.Render(renderer, NULL);
-                    if (score >= 5) {
+                    /*if (score >= 5) {
                         bullet.Render(renderer, NULL);
                         bullet.Bullet_Move();
-                    }
+                    }*/
                     SDL_RenderPresent(renderer);
 
                     SDL_Delay(16);
