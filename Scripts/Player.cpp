@@ -29,14 +29,14 @@ void Player::Player_Move() {
         if (base_x > SCREEN_WIDTH - rect_.w)
             base_x = SCREEN_WIDTH - rect_.w;
     }
-    if (keyStates[SDL_SCANCODE_SPACE]) {
+    /*if (keyStates[SDL_SCANCODE_SPACE]) {
         if (base_x + rect_.w/2 < SCREEN_WIDTH/2) {
             base_x = SCREEN_WIDTH - rect_.w;
         }
         if (base_x + rect_.w/2 >= SCREEN_WIDTH/2) {
             base_x = 0;
         }
-    }
+    }*/
 
     rect_.x = base_x;
     rect_.y = base_y;
@@ -79,10 +79,10 @@ bool Player::Base_Touch(Player &something) {
 }
 
 void Player::SPEED_UP() {
-    if (speed_.y > 0) speed_.y += 1.00f;
-    else speed_.y -= 1.00f;
-    if (speed_.x > 0) speed_.x += 1.00f;
-    else speed_.x -= 1.00f;
+    if (speed_.y > 0) speed_.y += 2.00f;
+    else speed_.y -= 2.00f;
+    if (speed_.x > 0) speed_.x += 2.00f;
+    else speed_.x -= 2.00f;
 }
 
 void Player::Ball_Move() {
@@ -96,15 +96,20 @@ void Player::Ball_Move() {
     }
 }
 
-void Player::Rand_Angle(Player &BaseBall) {
+void Player::Rand_Angle() {
     random_device rd;
     static mt19937 gen(rd());
     uniform_real_distribution<float> dist(-1.00f, 1.00f);
     speed_.x += dist(gen);
 }
 
-void Player::Bouncing() {
-    speed_.y *= -1;
+void Player::Bouncing(Player &Base) {
+    if (Base.rect_.x + Base.rect_.w >= rect_.x && Base.rect_.x <= rect_.x + rect_.w) {
+        speed_.y *= -1;
+    }
+    else if (Base.rect_.y - rect_.h <= rect_.y && Base.rect_.y + Base.rect_.h >= rect_.y) {
+        speed_.x *= -1;
+    }
 }
 
 void Player::Reset_SPEED() {

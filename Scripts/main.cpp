@@ -109,16 +109,16 @@ int main(int argc, char *argv[]) {
     Player2_win_round.getRect();
     Player2_win_round.setRect(180, 540);
 
-    bool quitGame = false; // Khi nào thật sự muốn thoát game
+    bool quitGame = false; // Thoát game
     while (!quitGame) {
-        bool menu = false; //Load Menu
+        bool menu = false; // Load Menu
         int game_mode = 0;
         while (!menu) {
             SDL_Event e;
             while (SDL_PollEvent(&e)) {
                 if (e.type == SDL_QUIT) {
                     quitGame = true;
-                    menu = true;  // Cho vòng lặp bên ngoài dừng lại luôn
+                    menu = true;  // Quit game luôn
                 }
                 if (e.type == SDL_KEYDOWN) {
                     if (e.key.keysym.sym == SDLK_RETURN) {
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
         if (game_mode == 0) {
             bool mode_1_Playround = false;
             while (!mode_1_Playround) {
-                resetGame(); //Reset thông số cho ván mới
+                resetGame(); // Reset thông số cho ván mới
                 bool fistGet_Highest = false;
 
                 bool begin = false;
@@ -209,7 +209,7 @@ int main(int argc, char *argv[]) {
                 bullet.setRect(0, 0);
                 if (quitGame) break;
 
-                bool quitRound = false; // Vòng lặp chính của game
+                bool quitRound = false; // Vòng lặp chính của 1 Player
                 int lastSpeedUpScore = 0;
                 while (!quitRound) {
                     while (SDL_PollEvent(&event)) {
@@ -225,8 +225,8 @@ int main(int argc, char *argv[]) {
 
                     if (base_ball.Base_Touch(ball)) {
                         Play_Paddle_Hit_Sound();
-                        ball.Rand_Angle(base_ball);
-                        ball.Bouncing();
+                        ball.Rand_Angle();
+                        ball.Bouncing(base_ball);
                         score++;
                         if (score > highest_score) {
                             highest_score = score;
@@ -238,7 +238,7 @@ int main(int argc, char *argv[]) {
                     }
                     Present_Score.setScore(score, renderer, 4, 30);
                     High_Score.setScore(highest_score, renderer, 4, 30);
-                    // Tăng tốc khi đạt điểm chia hết cho 15
+                    // Tăng tốc khi đạt điểm chia hết cho 10
                     if (score != 0 && score % 10 == 0 && score != lastSpeedUpScore && base_ball.Base_Touch(ball)) {
                         ball.SPEED_UP();
                         base_ball.SPEED_UP();
@@ -286,7 +286,7 @@ int main(int argc, char *argv[]) {
                     SDL_Event e;
                     while (SDL_PollEvent(&e)) {
                         if (e.type == SDL_QUIT) {
-                            quitGame = true;
+                            quitGame = true; // Quit luôn Game
                             waitForRestart = true;
                         }
                         if (e.type == SDL_KEYDOWN) {
@@ -295,7 +295,7 @@ int main(int argc, char *argv[]) {
                             }
                             waitForRestart = true;
                         }
-                    }//Quit luôn Game
+                    }
                     background.Render(renderer, NULL);
                     Line.Render(renderer, NULL);
                     base_ball.Render(renderer, NULL);
@@ -361,7 +361,7 @@ int main(int argc, char *argv[]) {
                     SDL_Delay(16);
                 }
                 if (quitGame) break;
-                bool quitRound = false; // Vòng lặp chính của game
+                bool quitRound = false; // Vòng lặp chính của You v Bot
                 bool start = true;
                 int count_touch = 0;
                 int last_speed_up = 0;
@@ -380,13 +380,16 @@ int main(int argc, char *argv[]) {
                     if (Line2.Cross_the_top_line(ball)) {
                         player2_win_round++;
                         Play_Get_HighScore_Sound();
-                        break;
+                        break; // Ra khỏi vòng chơi chính
                     }
-                    if (base_ball.Base_Touch(ball) || base_ball2.Base_Touch(ball)) {
+                    if (base_ball.Base_Touch(ball)) {
                         Play_Paddle_Hit_Sound();
-                        ball.Rand_Angle(base_ball);
-                        ball.Bouncing();
-
+                        ball.Rand_Angle();
+                        ball.Bouncing(base_ball);
+                    }
+                    if (base_ball2.Base_Touch(ball)) {
+                        Play_Paddle_Hit_Sound();
+                        ball.Bouncing(base_ball2);
                     }
                     Player1_win_round.setScore(player1_win_round, renderer, 1, 40);
                     Player2_win_round.setScore(player2_win_round, renderer, 1, 40);
@@ -440,7 +443,7 @@ int main(int argc, char *argv[]) {
                         SDL_Event e;
                         while (SDL_PollEvent(&e)) {
                             if (e.type == SDL_QUIT) {
-                                quitGame = true;
+                                quitGame = true; // Quit luôn Game
                                 waitForRestart = true;
                             }
                             if (e.type == SDL_KEYDOWN) {
@@ -449,7 +452,7 @@ int main(int argc, char *argv[]) {
                                 }
                                 waitForRestart = true;
                             }
-                        }//Quit luôn Game
+                        }
                         SDL_RenderClear(renderer);
                         background.Render(renderer, NULL);
                         Line.Render(renderer, NULL);
@@ -479,7 +482,7 @@ int main(int argc, char *argv[]) {
                 Uint32 lastToggleTime = SDL_GetTicks();
                 bool showText = true;
                 while (!begin) {
-                    quitEvents(quitGame, begin); //Quit luôn Game
+                    quitEvents(quitGame, begin); // Quit luôn Game
                     background.Render(renderer, NULL);
                     Line.Render(renderer, NULL);
                     Line2.Render(renderer, NULL);
@@ -506,7 +509,7 @@ int main(int argc, char *argv[]) {
                     SDL_Delay(16);
                 }
                 if (quitGame) break;
-                bool quitRound = false; // Vòng lặp chính của game
+                bool quitRound = false; // Vòng lặp chính của 2 Player
                 bool start = true;
                 int count_touch = 0;
                 int last_speed_up = 0;
@@ -525,13 +528,16 @@ int main(int argc, char *argv[]) {
                     if (Line2.Cross_the_top_line(ball)) {
                         player2_win_round++;
                         Play_Get_HighScore_Sound();
-                        break;
+                        break; // Ra khỏi vòng chơi chính
                     }
-                    if (base_ball.Base_Touch(ball) || base_ball2.Base_Touch(ball)) {
+                    if (base_ball.Base_Touch(ball)) {
                         Play_Paddle_Hit_Sound();
-                        ball.Rand_Angle(base_ball);
-                        ball.Bouncing();
-
+                        ball.Rand_Angle();
+                        ball.Bouncing(base_ball);
+                    }
+                    if (base_ball2.Base_Touch(ball)) {
+                        Play_Paddle_Hit_Sound();
+                        ball.Bouncing(base_ball2);
                     }
                     Player1_win_round.setScore(player1_win_round, renderer, 1, 40);
                     Player2_win_round.setScore(player2_win_round, renderer, 1, 40);
@@ -550,7 +556,7 @@ int main(int argc, char *argv[]) {
 
                     SDL_Delay(16);
 
-                    if (count_touch %10 == 0 && count_touch > 0 && count_touch != last_speed_up) {
+                    if (count_touch %5 == 0 && count_touch > 0 && count_touch != last_speed_up) {
                         last_speed_up = count_touch;
                         ball.SPEED_UP();
                     }
