@@ -29,15 +29,6 @@ void Player::Player_Move() {
         if (base_x > SCREEN_WIDTH - rect_.w)
             base_x = SCREEN_WIDTH - rect_.w;
     }
-    /*if (keyStates[SDL_SCANCODE_SPACE]) {
-        if (base_x + rect_.w/2 < SCREEN_WIDTH/2) {
-            base_x = SCREEN_WIDTH - rect_.w;
-        }
-        if (base_x + rect_.w/2 >= SCREEN_WIDTH/2) {
-            base_x = 0;
-        }
-    }*/
-
     rect_.x = base_x;
     rect_.y = base_y;
 }
@@ -57,14 +48,6 @@ void Player::Player2_Move() {
         if (base_x > SCREEN_WIDTH - rect_.w)
             base_x = SCREEN_WIDTH - rect_.w;
         //cout << "D" << endl;
-    }
-    if (keyStates[SDL_SCANCODE_SPACE]) {
-        if (base_x + rect_.w/2 < SCREEN_WIDTH/2) {
-            base_x = SCREEN_WIDTH - rect_.w;
-        }
-        if (base_x + rect_.w/2 >= SCREEN_WIDTH/2) {
-            base_x = 0;
-        }
     }
     rect_.x = base_x;
     rect_.y = base_y;

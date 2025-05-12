@@ -16,6 +16,7 @@ BaseObject High_Score;
 BaseObject Mode_1_Text;
 BaseObject Mode_2_Text;
 BaseObject Mode_3_Text;
+BaseObject Pause_Text;
 BaseObject Player1_win_round;
 BaseObject Player2_win_round;
 BaseObject Back_to_menu_text;
@@ -80,6 +81,9 @@ int main(int argc, char *argv[]) {
     Mode_3_Text.loadText("Text/Retro Gaming.ttf", "2 PLAYER", renderer, 30);
     Mode_3_Text.getRect();
     Mode_3_Text.setRect(120, SCREEN_HEIGHT / 2.0 + 120);
+    Pause_Text.loadText("Text/Retro Gaming.ttf", "PAUSE", renderer, 30);
+    Pause_Text.getRect();
+    Pause_Text.setRect(140, SCREEN_HEIGHT / 2.0);
     Back_to_menu_text.loadText("Text/Retro Gaming.ttf", "PRESS SPACE: MENU", renderer, 12);
     Back_to_menu_text.getRect();
     Back_to_menu_text.setRect(125, SCREEN_HEIGHT / 2.0 + 60);
@@ -110,9 +114,9 @@ int main(int argc, char *argv[]) {
     Player2_win_round.setRect(180, 540);
 
     bool quitGame = false; // Thoát game
+    int game_mode = 0;
     while (!quitGame) {
         bool menu = false; // Load Menu
-        int game_mode = 0;
         while (!menu) {
             SDL_Event e;
             while (SDL_PollEvent(&e)) {
@@ -171,6 +175,7 @@ int main(int argc, char *argv[]) {
         }
         if (quitGame) break;
         if (game_mode == 0) {
+            bool pause = false;
             bool mode_1_Playround = false;
             while (!mode_1_Playround) {
                 resetGame(); // Reset thông số cho ván mới
@@ -217,6 +222,29 @@ int main(int argc, char *argv[]) {
                             quitGame = true;
                             quitRound = true;
                         }
+                        if (event.type == SDL_KEYDOWN) {
+                            if (event.key.keysym.sym == SDLK_SPACE) {
+                                pause = !pause;
+                            }
+                        }
+                    }
+                    while (pause) {
+                        while (SDL_PollEvent(&event)) {
+                            if (event.type == SDL_QUIT) {
+                                quitGame = true;
+                                quitRound = true;
+                                pause = false;
+                            }
+                            if (event.type == SDL_KEYDOWN) {
+                                pause = !pause;
+                                if (event.key.keysym.sym == SDLK_SPACE) {
+                                    mode_1_Playround = true;
+                                    quitRound = true;
+                                }
+                            }
+                        }
+                        Pause_Text.Render(renderer);
+                        SDL_RenderPresent(renderer);
                     }
                     if (Line.Cross_the_line(ball) || base_ball.Base_Touch(bullet)) {
                         quitRound = true;
@@ -275,9 +303,8 @@ int main(int argc, char *argv[]) {
                     ball.Ball_Move();
                     base_ball.Player_Move();
                 }
-
-
                 if (quitGame) break;
+                if (mode_1_Playround) break;
 
                 bool waitForRestart = false;
                 lastToggleTime = SDL_GetTicks();
@@ -326,6 +353,7 @@ int main(int argc, char *argv[]) {
             SDL_RenderClear(renderer);
         }
         if (game_mode == 1) {
+            bool pause = false;
             bool mode_2_Playround = false;
             while (!mode_2_Playround) {
                 if (player1_win_round == 3 || player2_win_round == 3) resetGame(); //Reset thông số cho ván mới
@@ -371,6 +399,29 @@ int main(int argc, char *argv[]) {
                             quitGame = true;
                             quitRound = true;
                         }
+                        if (event.type == SDL_KEYDOWN) {
+                            if (event.key.keysym.sym == SDLK_SPACE) {
+                                pause = !pause;
+                            }
+                        }
+                    }
+                    while (pause) {
+                        while (SDL_PollEvent(&event)) {
+                            if (event.type == SDL_QUIT) {
+                                quitGame = true;
+                                quitRound = true;
+                                pause = false;
+                            }
+                            if (event.type == SDL_KEYDOWN) {
+                                pause = !pause;
+                                if (event.key.keysym.sym == SDLK_SPACE) {
+                                    mode_2_Playround = true;
+                                    quitRound = true;
+                                }
+                            }
+                        }
+                        Pause_Text.Render(renderer);
+                        SDL_RenderPresent(renderer);
                     }
                     if (Line.Cross_the_line(ball)) {
                         player1_win_round++;
@@ -474,6 +525,7 @@ int main(int argc, char *argv[]) {
             SDL_RenderClear(renderer);
         }
         if (game_mode == 2) {
+            bool pause = false;
             bool mode_3_Playround = false;
             while (!mode_3_Playround) {
                 if (player1_win_round == 3 || player2_win_round == 3) resetGame(); //Reset thông số cho ván mới
@@ -519,6 +571,29 @@ int main(int argc, char *argv[]) {
                             quitGame = true;
                             quitRound = true;
                         }
+                        if (event.type == SDL_KEYDOWN) {
+                            if (event.key.keysym.sym == SDLK_SPACE) {
+                                pause = !pause;
+                            }
+                        }
+                    }
+                    while (pause) {
+                        while (SDL_PollEvent(&event)) {
+                            if (event.type == SDL_QUIT) {
+                                quitGame = true;
+                                quitRound = true;
+                                pause = false;
+                            }
+                            if (event.type == SDL_KEYDOWN) {
+                                pause = !pause;
+                                if (event.key.keysym.sym == SDLK_SPACE) {
+                                    mode_3_Playround = true;
+                                    quitRound = true;
+                                }
+                            }
+                        }
+                        Pause_Text.Render(renderer);
+                        SDL_RenderPresent(renderer);
                     }
                     if (Line.Cross_the_line(ball)) {
                         player1_win_round++;
