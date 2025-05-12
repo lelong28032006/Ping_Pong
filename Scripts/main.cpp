@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
                     SDL_Delay(16);
                 }
                 bullet.setRect(0, 0);
-                if (quitGame) break;
+                if (quitGame || mode_1_Playround) break;
 
                 bool quitRound = false; // Vòng lặp chính của 1 Player
                 int lastSpeedUpScore = 0;
@@ -303,8 +303,7 @@ int main(int argc, char *argv[]) {
                     ball.Ball_Move();
                     base_ball.Player_Move();
                 }
-                if (quitGame) break;
-                if (mode_1_Playround) break;
+                if (quitGame || mode_1_Playround) break;
 
                 bool waitForRestart = false;
                 lastToggleTime = SDL_GetTicks();
@@ -348,7 +347,7 @@ int main(int argc, char *argv[]) {
                     SDL_RenderPresent(renderer);
                     SDL_Delay(16);
                 }
-                if (quitGame) break;
+                if (quitGame || mode_1_Playround) break;
             }
             SDL_RenderClear(renderer);
         }
@@ -388,7 +387,7 @@ int main(int argc, char *argv[]) {
                     SDL_RenderPresent(renderer);
                     SDL_Delay(16);
                 }
-                if (quitGame) break;
+                if (quitGame || mode_2_Playround) break;
                 bool quitRound = false; // Vòng lặp chính của You v Bot
                 bool start = true;
                 int count_touch = 0;
@@ -477,7 +476,7 @@ int main(int argc, char *argv[]) {
                     base_ball.Player_Move();
                     base_ball2.Chasing(ball);
                 }
-                if (quitGame) break;
+                if (quitGame || mode_2_Playround) break;
                 if (player1_win_round == 3 || player2_win_round == 3) {
                     if (player1_win_round == 3) {
                         Text.loadText("Text/Retro Gaming.ttf", "YOU LOSE!!!", renderer, 40);
@@ -520,7 +519,7 @@ int main(int argc, char *argv[]) {
                         SDL_Delay(16);
                     }
                 }
-                if (quitGame) break;
+                if (quitGame || mode_2_Playround) break;
             }
             SDL_RenderClear(renderer);
         }
@@ -560,7 +559,7 @@ int main(int argc, char *argv[]) {
                     SDL_RenderPresent(renderer);
                     SDL_Delay(16);
                 }
-                if (quitGame) break;
+                if (quitGame || mode_3_Playround) break;
                 bool quitRound = false; // Vòng lặp chính của 2 Player
                 bool start = true;
                 int count_touch = 0;
@@ -644,12 +643,11 @@ int main(int argc, char *argv[]) {
                         ball.Ball_START();
                         continue;
                     }
-                    SDL_PumpEvents();
                     ball.Ball_Move();
                     base_ball.Player_Move();
                     base_ball2.Player2_Move();
                 }
-                if (quitGame) break;
+                if (quitGame || mode_3_Playround) break;
                 if (player1_win_round == 3 || player2_win_round == 3) {
                     if (player1_win_round == 3) {
                         Text.loadText("Text/Retro Gaming.ttf", "PLAYER 1 WIN", renderer, 40);
@@ -692,7 +690,7 @@ int main(int argc, char *argv[]) {
                         SDL_Delay(16);
                     }
                 }
-                if (quitGame) break;
+                if (quitGame || mode_3_Playround) break;
             }
             SDL_RenderClear(renderer);
         }
@@ -772,13 +770,13 @@ void quitEvents(bool &quitGame, bool &otherFlag) {
 }
 
 void resetRoundState() {
-    base_ball.setRect(140, 500); //Reset vị trí thanh trượt
+    base_ball.setRect(140, 500); //Reset vị trí Paddle
     base_ball.Reset_SPEED();
-    base_ball2.setRect(140, 80); //Reset vị trí thanh trượt
+    base_ball2.setRect(140, 80); //Reset vị trí Paddle
     base_ball2.Reset_SPEED();
     ball.setRect(SCREEN_WIDTH / 2.0 - 10, SCREEN_HEIGHT / 2.0); //Reset vị trí bóng
     ball.Reset_SPEED();
-    ball.Ball_START(); //Khởi động lại bóng
+    ball.Ball_START(); //Bóng về trạng thái khởi động
 }
 
 void resetGame() {
